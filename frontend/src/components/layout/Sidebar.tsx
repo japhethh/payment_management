@@ -13,6 +13,8 @@ import {
   Menu,
   NotebookText,
   CreditCard,
+  Cog,
+  ChartNoAxesCombined,
 } from "lucide-react"
 import { useState } from "react"
 
@@ -45,8 +47,7 @@ export default function Sidebar() {
           <NavLink
             to="/"
             className={({ isActive }) =>
-              `flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-                isActive ? activeLinkClass : defaultLinkClass
+              `flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive ? activeLinkClass : defaultLinkClass
               } ${isCollapsed ? "justify-center" : ""}`
             }
           >
@@ -58,8 +59,7 @@ export default function Sidebar() {
           <NavLink
             to="/invoice-management"
             className={({ isActive }) =>
-              `flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-                isActive ? activeLinkClass : defaultLinkClass
+              `flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive ? activeLinkClass : defaultLinkClass
               } ${isCollapsed ? "justify-center" : ""}`
             }
           >
@@ -71,8 +71,7 @@ export default function Sidebar() {
           <NavLink
             to="/payment-process"
             className={({ isActive }) =>
-              `flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-                isActive ? activeLinkClass : defaultLinkClass
+              `flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive ? activeLinkClass : defaultLinkClass
               } ${isCollapsed ? "justify-center" : ""}`
             }
           >
@@ -80,12 +79,34 @@ export default function Sidebar() {
             <span className={`${isCollapsed ? "hidden" : "block"}`}>Payment Process</span>
           </NavLink>
 
+          {/* Payment Gateway */}
+          <NavLink
+            to="/payment-gateway"
+            className={({ isActive }) =>
+              `flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive ? activeLinkClass : defaultLinkClass
+              } ${isCollapsed ? "justify-center" : ""}`
+            }
+          >
+            <Cog className="h-4 w-4" />
+            <span className={`${isCollapsed ? "hidden" : "block"}`}>Payment Gateway</span>
+          </NavLink>
+          {/* Reporting Analytics */}
+          <NavLink
+            to="/report-analytics"
+            className={({ isActive }) =>
+              `flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive ? activeLinkClass : defaultLinkClass
+              } ${isCollapsed ? "justify-center" : ""}`
+            }
+          >
+            <ChartNoAxesCombined className="h-4 w-4" />
+            <span className={`${isCollapsed ? "hidden" : "block"}`}>Reporting Analytics</span>
+          </NavLink>
+
           {/* Settings */}
           <NavLink
             to="/settings"
             className={({ isActive }) =>
-              `flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-                isActive ? activeLinkClass : defaultLinkClass
+              `flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive ? activeLinkClass : defaultLinkClass
               } ${isCollapsed ? "justify-center" : ""}`
             }
           >
@@ -108,8 +129,7 @@ export default function Sidebar() {
                     <NavLink
                       to="/users"
                       className={({ isActive }) =>
-                        `flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-                          isActive ? activeLinkClass : defaultLinkClass
+                        `flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive ? activeLinkClass : defaultLinkClass
                         }`
                       }
                     >
@@ -118,8 +138,7 @@ export default function Sidebar() {
                     <NavLink
                       to="/create"
                       className={({ isActive }) =>
-                        `flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-                          isActive ? activeLinkClass : defaultLinkClass
+                        `flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive ? activeLinkClass : defaultLinkClass
                         }`
                       }
                     >
@@ -141,8 +160,7 @@ export default function Sidebar() {
                     <NavLink
                       to="/posts"
                       className={({ isActive }) =>
-                        `flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-                          isActive ? activeLinkClass : defaultLinkClass
+                        `flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive ? activeLinkClass : defaultLinkClass
                         }`
                       }
                     >
@@ -151,8 +169,7 @@ export default function Sidebar() {
                     <NavLink
                       to="/media"
                       className={({ isActive }) =>
-                        `flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-                          isActive ? activeLinkClass : defaultLinkClass
+                        `flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive ? activeLinkClass : defaultLinkClass
                         }`
                       }
                     >
@@ -177,8 +194,7 @@ export default function Sidebar() {
           <NavLink
             to="/calendar"
             className={({ isActive }) =>
-              `flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-                isActive ? activeLinkClass : defaultLinkClass
+              `flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive ? activeLinkClass : defaultLinkClass
               } ${isCollapsed ? "justify-center" : ""}`
             }
           >

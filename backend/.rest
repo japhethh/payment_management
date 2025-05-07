@@ -1,12 +1,16 @@
 @baseUrl = http://localhost:3000
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODAyN2RkOGEwNWU4MDBiZGQxNmFhYTYiLCJpYXQiOjE3NDY2NDA3NTEsImV4cCI6MTc0NjY0NDM1MX0.e97qMT_ALpBeXXMQVKfeoKSXgbLYCCr3yA5dcBQePw8
+@userId = 68027dd8a05e800bdd16aaa6
+
+### User Management Endpoints
 
 ### get all users
-POST http://localhost:3000/api/user/get
-Content-type:"application/json"
+POST {{baseUrl}}/api/user/get
+Content-Type: application/json
 
-### create post
-POST http://localhost:3000/api/user/create
-Content-type:application/json
+### create user
+POST {{baseUrl}}/api/user/create
+Content-Type: application/json
 
 {
   "name": "Adrey Japheth",
@@ -15,17 +19,18 @@ Content-type:application/json
   "userName": "adrey",
   "role": "admin"
 }
+
 ### DELETE User
-POST http://localhost:3000/api/user/delete
-Content-Type:application/json
+POST {{baseUrl}}/api/user/delete
+Content-Type: application/json
 
 {
-  "id":"6802181c90aafa2606742707"
+  "id": "6802181c90aafa2606742707"
 }
 
 ### Login User
 POST {{baseUrl}}/api/auth/login
-Content-Type:application/json
+Content-Type: application/json
 
 {
   "email": "adrey2@example.com",
@@ -34,12 +39,98 @@ Content-Type:application/json
 
 ### Register User
 POST {{baseUrl}}/api/auth/register
-Content-Type:application/json
+Content-Type: application/json
 
 {
-  "name":"adrey",
-  "userName":"Adrey",
+  "name": "adrey",
+  "userName": "Adrey",
   "email": "adrey2@example.com",
   "password": "Jcwdlove",
-  "role":"super-admin"
+  "role": "super-admin"
+}
+
+### Payment Endpoints
+
+### View payment summary
+GET {{baseUrl}}/api/payments/summary/{{userId}}
+Authorization: Bearer {{token}}
+
+### Submit a new payment
+POST {{baseUrl}}/api/payments
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "userId": "{{userId}}",
+  "amount": 99.99,
+  "description": "Tuition fee payment",
+  "paymentMethod": "credit_card"
+}
+
+### Get payment by ID
+GET {{baseUrl}}/api/payments/payment_id_here
+Authorization: Bearer {{token}}
+
+### Invoice Endpoints
+
+### Get all invoices for a user
+GET {{baseUrl}}/api/invoices/user/{{userId}}
+Authorization: Bearer {{token}}
+
+### Get invoice by ID
+GET {{baseUrl}}/api/invoices/invoice_id_here
+Authorization: Bearer {{token}}
+
+### Update invoice status
+PATCH {{baseUrl}}/api/invoices/invoice_id_here/status
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "status": "paid"
+}
+
+### Generate invoice PDF (if implemented)
+GET {{baseUrl}}/api/invoices/invoice_id_here/pdf
+Authorization: Bearer {{token}}
+
+### Report Endpoints
+
+### Fetch payment and invoice data
+GET {{baseUrl}}/api/reports/data?startDate=2023-01-01&endDate=2023-12-31
+Authorization: Bearer {{token}}
+
+### Generate summary reports
+GET {{baseUrl}}/api/reports/summary
+Authorization: Bearer {{token}}
+
+### Export reports as JSON
+GET {{baseUrl}}/api/reports/export?type=payments&format=json&startDate=2023-01-01&endDate=2023-12-31
+Authorization: Bearer {{token}}
+
+### Export reports as CSV
+GET {{baseUrl}}/api/reports/export?type=invoices&format=csv&startDate=2023-01-01&endDate=2023-12-31
+Authorization: Bearer {{token}}
+
+### Admin Endpoints
+
+### Get all users (admin only)
+GET {{baseUrl}}/api/admin/users
+Authorization: Bearer {{token}}
+
+### Get all payments (admin only)
+GET {{baseUrl}}/api/admin/payments
+Authorization: Bearer {{token}}
+
+### Get all invoices (admin only)
+GET {{baseUrl}}/api/admin/invoices
+Authorization: Bearer {{token}}
+
+### Update user role (admin only)
+PATCH {{baseUrl}}/api/admin/users/{{userId}}/role
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "role": "admin"
 }

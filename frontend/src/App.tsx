@@ -17,6 +17,8 @@ import UserTable from './pages/UserTable'
 import InvoiceManagement from "./pages/InvoiceManagement";
 import PaymentProcess from "./pages/PaymentProcess";
 import ReportAnalytics from "./pages/ReportAnalytics";
+import PaymentGateway from "./pages/PaymentGateway";
+import ReportingAnalytics from "./pages/ReportingAnalytics";
 
 
 interface AuthRouteProps {
@@ -43,7 +45,7 @@ const protectedRoutes = [
   { path: "/", element: <DashboardPage /> },
   { path: "/invoice-management", element: <InvoiceManagement /> },
   { path: "/payment-process", element: <PaymentProcess /> },
-  { path: "/report-analytics", element: <ReportAnalytics /> },
+  { path: "/payment-gateway", element: <PaymentGateway /> },
   { path: "/settings", element: <SettingsPage /> },
   { path: "/users", element: < UserTable /> },
   { path: "/create", element: <CreateUserPage /> },
