@@ -1,0 +1,45 @@
+@baseUrl = http://localhost:3000
+
+### get all users
+POST http://localhost:3000/api/user/get
+Content-type:"application/json"
+
+### create post
+POST http://localhost:3000/api/user/create
+Content-type:application/json
+
+{
+  "name": "Adrey Japheth",
+  "email": "adrey1@example.com",
+  "password": "Jcwdlove",
+  "userName": "adrey",
+  "role": "admin"
+}
+### DELETE User
+POST http://localhost:3000/api/user/delete
+Content-Type:application/json
+
+{
+  "id":"6802181c90aafa2606742707"
+}
+
+### Login User
+POST {{baseUrl}}/api/auth/login
+Content-Type:application/json
+
+{
+  "email": "adrey2@example.com",
+  "password": "Jcwdlove"
+}
+
+### Register User
+POST {{baseUrl}}/api/auth/register
+Content-Type:application/json
+
+{
+  "name":"adrey",
+  "userName":"Adrey",
+  "email": "adrey2@example.com",
+  "password": "Jcwdlove",
+  "role":"super-admin"
+}
