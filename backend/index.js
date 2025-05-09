@@ -9,6 +9,7 @@ import cookieParser from "cookie-parser";
 import invoiceRouter from "./routes/invoiceRouter.js";
 import paymentRouter from "./routes/paymentRouter.js";
 import reportRouter from "./routes/reportRouter.js";
+import webhookRouter from "./routes/webhookRouter.js";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -27,9 +28,10 @@ app.get("/api/auth/check", authMiddleware, (req, res) => {
 });
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
-app.use('/api/payments', paymentRouter);
-app.use('/api/invoices', invoiceRouter);
-app.use('/api/reports', reportRouter);
+app.use("/api/payments", paymentRouter);
+app.use("/api/invoices", invoiceRouter);
+app.use("/api/reports", reportRouter);
+app.use("/api/webhooks", webhookRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

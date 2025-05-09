@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:3000
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODAyN2RkOGEwNWU4MDBiZGQxNmFhYTYiLCJpYXQiOjE3NDY2NDA3NTEsImV4cCI6MTc0NjY0NDM1MX0.e97qMT_ALpBeXXMQVKfeoKSXgbLYCCr3yA5dcBQePw8
+@token =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODAyN2RkOGEwNWU4MDBiZGQxNmFhYTYiLCJpYXQiOjE3NDY4MjY1NzAsImV4cCI6MTc0NjgzMDE3MH0.xz56nU0P28-Kl2ue3Fb1OBtLgoApUo6JsyTRdSmMTQ4
 @userId = 68027dd8a05e800bdd16aaa6
 
 ### User Management Endpoints
@@ -73,6 +73,11 @@ Authorization: Bearer {{token}}
 
 ### Invoice Endpoints
 
+### Get all invoices 
+GET {{baseUrl}}/api/invoices/getAll
+Authorization: Bearer {{token}}
+
+
 ### Get all invoices for a user
 GET {{baseUrl}}/api/invoices/user/{{userId}}
 Authorization: Bearer {{token}}
@@ -88,6 +93,21 @@ Authorization: Bearer {{token}}
 
 {
   "status": "paid"
+}
+
+
+### Create a new Invoice 
+POST {{baseUrl}}/api/invoices
+Content-Type: application/json  
+Authorization: Bearer {{token}}
+
+{
+  "items": [
+    { "description": "Field Trip - Educational Tour", "amount": 1800, "quantity": 1 }
+  ],
+  "totalAmount": 1800,
+  "status": "draft",
+  "dueDate": "2025-06-20T00:00:00.000Z"
 }
 
 ### Generate invoice PDF (if implemented)

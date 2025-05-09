@@ -1,99 +1,97 @@
-// routes/paymentRoutes.js
 import express from "express";
+import axios from "axios";
 import Invoice from "../models/invoiceModel.js";
-import Payment from "../models/paymentModel.js";
-import { authMiddleware } from "../middleware/Auth.js";
-import { processPayment, sendNotification } from "../services/paymentGateway.js";
 
 const paymentRouter = express.Router();
 
-// View payment summary
-paymentRouter.get("/summary/:userId", authMiddleware, async (req, res) => {
-  try {
-    const payments = await Payment.find({ user: req.params.userId });
-    res.json(payments);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+paymentRouter.post("/payment-link", async (req, res) => {
+  const { _id } = req.body;
+
+  if (!_id) {
+    return res.status(400).json({
+      message: "Invoice ID is required",
+    });
   }
-});
 
-// Submit payment
-paymentRouter.post("/", authMiddleware, async (req, res) => {
   try {
-    const { userId, amount, description, paymentMethod } = req.body;
+    // Find the invoice by ID
+    const invoice = await Invoice.findById(_id);
 
-    // Create payment record
-    const payment = new Payment({
-      user: userId,
-      amount,
-      description,
-      paymentMethod,
-    });
-
-    // Save initial payment record
-    await payment.save();
-
-    // Validate payment information
-    if (amount <= 0) {
-      throw new Error("Invalid payment amount");
+    if (!invoice) {
+      return res.status(404).json({
+        message: "Invoice not found",
+      });
     }
 
-    // Process payment via gateway
-    const paymentResult = await processPayment({
-      amount,
-      paymentMethod,
-      description,
-    });
+    // Generate description from invoice items
+    const itemsDescription = invoice.items
+      .map((item) => `${item.description} (${item.quantity}x)`)
+      .join(", ");
 
-    // Update payment with transaction details
-    payment.transactionId = paymentResult.transactionId;
-    payment.status = paymentResult.success ? "completed" : "failed";
-    payment.paymentDate = new Date();
-    await payment.save();
+    const encodeKey = Buffer.from(process.env.PAYMONGO_SECRET_KEY).toString(
+      "base64"
+    );
 
-    // Generate invoice if payment successful
-    if (paymentResult.success) {
-      // Generate invoice number (simple implementation)
-      const invoiceNumber = `INV-${Date.now()}-${userId.substring(0, 5)}`;
-
-      const invoice = new Invoice({
-        user: userId,
-        payment: payment._id,
-        invoiceNumber,
-        items: [
-          {
-            description,
-            amount,
+    const options = {
+      method: "POST",
+      url: "https://api.paymongo.com/v1/links",
+      headers: {
+        accept: "application/json",
+        "content-type": "application/json",
+        authorization: `Basic ${encodeKey}`,
+      },
+      data: {
+        data: {
+          attributes: {
+            amount: invoice.totalAmount * 100, // Convert to centavos
+            description: `Payment for Invoice ${
+              invoice.invoiceNumber || invoice._id
+            }`,
+            remarks: `Items: ${itemsDescription}`,
+            reference_number: invoice.invoiceNumber || invoice._id,
           },
-        ],
-        totalAmount: amount,
-        status: "paid",
-        dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
-      });
+        },
+      },
+    };
 
-      await invoice.save();
+    const response = await axios.request(options);
+    const paymentLink = response.data.data.attributes.checkout_url;
+    const paymongoId = response.data.data.id;
 
-      // Notify user of payment status
-      await sendNotification(userId, {
-        type: "payment_success",
-        message: `Your payment of $${amount} was successful. Invoice #${invoiceNumber} has been generated.`,
-      });
-    } else {
-      // Notify user of payment failure
-      await sendNotification(userId, {
-        type: "payment_failed",
-        message: `Your payment of $${amount} failed. Please try again.`,
-      });
-    }
+    console.log("Payment link created successfully:", paymentLink);
 
-    res.status(201).json({
-      payment,
-      success: paymentResult.success,
-      message: paymentResult.success ? "Payment successful" : "Payment failed",
+    // Update invoice status to reflect payment link was sent
+    invoice.status = "sent";
+
+    // REMOVE THIS PROBLEMATIC CODE:
+    // if (!invoice.payment) {
+    //   invoice.payment = { paymongoId };
+    // }
+
+    // Instead, you can store the PayMongo ID in a different way:
+    // Option 1: If you have a paymongoReference field in your schema
+    // invoice.paymongoReference = paymongoId;
+
+    // Option 2: Store it temporarily in a non-schema field (won't be saved to DB)
+    // invoice._paymongoId = paymongoId;
+
+    await invoice.save();
+
+    res.status(200).json({
+      message: "Payment link created successfully",
+      link: paymentLink,
+      _id: invoice._id,
+      paymongoId: paymongoId, // Return the PayMongo ID in the response
     });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error("Error creating payment link:", error);
+
+    res.status(500).json({
+      message: "Failed to create payment link. Please try again.",
+      error: error.response?.data || error.message,
+    });
   }
 });
 
 export default paymentRouter;
+

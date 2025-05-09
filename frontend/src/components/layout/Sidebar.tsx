@@ -67,7 +67,7 @@ export default function Sidebar() {
             <span className={`${isCollapsed ? "hidden" : "block"}`}>Invoice Management</span>
           </NavLink>
 
-          {/* PaymentProcess */}
+          {/* PaymentProcess
           <NavLink
             to="/payment-process"
             className={({ isActive }) =>
@@ -77,42 +77,8 @@ export default function Sidebar() {
           >
             <CreditCard className="h-4 w-4" />
             <span className={`${isCollapsed ? "hidden" : "block"}`}>Payment Process</span>
-          </NavLink>
+          </NavLink> */}
 
-          {/* Payment Gateway */}
-          <NavLink
-            to="/payment-gateway"
-            className={({ isActive }) =>
-              `flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive ? activeLinkClass : defaultLinkClass
-              } ${isCollapsed ? "justify-center" : ""}`
-            }
-          >
-            <Cog className="h-4 w-4" />
-            <span className={`${isCollapsed ? "hidden" : "block"}`}>Payment Gateway</span>
-          </NavLink>
-          {/* Reporting Analytics */}
-          <NavLink
-            to="/report-analytics"
-            className={({ isActive }) =>
-              `flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive ? activeLinkClass : defaultLinkClass
-              } ${isCollapsed ? "justify-center" : ""}`
-            }
-          >
-            <ChartNoAxesCombined className="h-4 w-4" />
-            <span className={`${isCollapsed ? "hidden" : "block"}`}>Reporting Analytics</span>
-          </NavLink>
-
-          {/* Settings */}
-          <NavLink
-            to="/settings"
-            className={({ isActive }) =>
-              `flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive ? activeLinkClass : defaultLinkClass
-              } ${isCollapsed ? "justify-center" : ""}`
-            }
-          >
-            <Settings className="h-4 w-4" />
-            <span className={`${isCollapsed ? "hidden" : "block"}`}>Settings</span>
-          </NavLink>
 
           {/* User Management */}
           {!isCollapsed ? (
