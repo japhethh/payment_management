@@ -92,6 +92,8 @@ export default function InvoiceManagement() {
   })
   const [openMenuId, setOpenMenuId] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false)
+  const [invoiceToDelete, setInvoiceToDelete] = useState<string | null>(null)
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState<number>(1)
@@ -369,14 +371,14 @@ export default function InvoiceManagement() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-6 max-w-7xl">
-      <h1 className="text-2xl sm:text-3xl font-bold mb-6">Invoice Management</h1>
+    <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-6 max-w-full xl:max-w-[1400px] 2xl:max-w-[1600px]">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Invoice Management</h1>
 
       {error && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">{error}</div>}
 
       <Tabs defaultValue="invoices" className="w-full">
         <ScrollArea className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-8 min-w-[400px]">
+          <TabsList className="grid w-full grid-cols-3 mb-6 sm:mb-8 min-w-[400px]">
             <TabsTrigger value="invoices">Invoices</TabsTrigger>
             <TabsTrigger value="repository">Invoice Repository</TabsTrigger>
             <TabsTrigger value="payments">Payments</TabsTrigger>
@@ -384,14 +386,14 @@ export default function InvoiceManagement() {
         </ScrollArea>
 
         <TabsContent value="invoices">
-          <Card>
-            <CardHeader>
+          <Card className="border shadow-sm">
+            <CardHeader className="px-4 sm:px-6 py-4 sm:py-6">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
-                  <CardTitle>Invoices</CardTitle>
-                  <CardDescription>View and manage all invoices.</CardDescription>
+                  <CardTitle className="text-xl sm:text-2xl">Invoices</CardTitle>
+                  <CardDescription className="text-sm sm:text-base mt-1">View and manage all invoices.</CardDescription>
                 </div>
-                <Button onClick={() => setIsCreateDialogOpen(true)} className="w-full md:w-auto">
+                <Button onClick={() => setIsCreateDialogOpen(true)} className="w-full md:w-auto h-10">
                   <FileText className="mr-2 h-4 w-4" />
                   <span className="hidden sm:inline">Create Invoice</span>
                   <span className="sm:hidden">Create</span>
@@ -400,17 +402,17 @@ export default function InvoiceManagement() {
 
               <div className="flex flex-col sm:flex-row gap-4 mt-4">
                 <div className="relative flex-1">
-                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Search className="absolute left-2.5 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
                     placeholder="Search invoices..."
-                    className="pl-8"
+                    className="pl-8 h-10"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
                   {searchTerm && (
                     <button
                       onClick={() => setSearchTerm("")}
-                      className="absolute right-2.5 top-2.5 text-muted-foreground hover:text-foreground"
+                      className="absolute right-2.5 top-3 text-muted-foreground hover:text-foreground"
                     >
                       <X className="h-4 w-4" />
                     </button>
@@ -419,7 +421,7 @@ export default function InvoiceManagement() {
 
                 <div className="flex gap-2">
                   <Select value={statusFilter} onValueChange={setStatusFilter}>
-                    <SelectTrigger className="w-full sm:w-[180px]">
+                    <SelectTrigger className="w-full sm:w-[180px] h-10">
                       <SelectValue placeholder="Filter by status" />
                     </SelectTrigger>
                     <SelectContent>
@@ -436,135 +438,142 @@ export default function InvoiceManagement() {
               </div>
             </CardHeader>
 
-            <CardContent>
+            <CardContent className="px-4 sm:px-6 py-2 sm:py-4">
               {isLoading ? (
                 <div className="flex justify-center items-center h-24">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
                 </div>
               ) : (
-                <div className="overflow-x-auto">
-                  <div className="rounded-md border min-w-[700px]">
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Invoice #</TableHead>
-                          <TableHead>Customer</TableHead>
-                          <TableHead className="hidden sm:table-cell">Created Date</TableHead>
-                          <TableHead className="hidden md:table-cell">Due Date</TableHead>
-                          <TableHead>Status</TableHead>
-                          <TableHead className="text-right">Amount</TableHead>
-                          <TableHead className="text-center">Actions</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {currentInvoices.length === 0 ? (
-                          <TableRow>
-                            <TableCell colSpan={7} className="h-24 text-center">
-                              No invoices found.
-                            </TableCell>
+                <div className="overflow-x-auto -mx-4 sm:-mx-6">
+                  <div className="inline-block min-w-full align-middle px-4 sm:px-6">
+                    <div className="overflow-hidden border rounded-lg">
+                      <Table>
+                        <TableHeader>
+                          <TableRow className="bg-muted/50">
+                            <TableHead className="font-semibold">Invoice #</TableHead>
+                            <TableHead className="font-semibold">Customer</TableHead>
+                            <TableHead className="hidden sm:table-cell font-semibold">Created Date</TableHead>
+                            <TableHead className="hidden md:table-cell font-semibold">Due Date</TableHead>
+                            <TableHead className="font-semibold">Status</TableHead>
+                            <TableHead className="text-right font-semibold">Amount</TableHead>
+                            <TableHead className="text-center font-semibold">Actions</TableHead>
                           </TableRow>
-                        ) : (
-                          currentInvoices.map((invoice) => (
-                            <TableRow key={invoice._id}>
-                              <TableCell className="font-medium">{invoice.invoiceNumber}</TableCell>
-                              <TableCell>
-                                <div className="max-w-[150px] truncate">{invoice.customer}</div>
-                                <div className="text-sm text-muted-foreground truncate">{invoice.email}</div>
+                        </TableHeader>
+                        <TableBody>
+                          {currentInvoices.length === 0 ? (
+                            <TableRow>
+                              <TableCell colSpan={7} className="h-24 text-center">
+                                No invoices found.
                               </TableCell>
-                              <TableCell className="hidden sm:table-cell">{formatDate(invoice.createdAt)}</TableCell>
-                              <TableCell className="hidden md:table-cell">{formatDate(invoice.dueDate)}</TableCell>
-                              <TableCell>{renderStatusBadge(invoice.status)}</TableCell>
-                              <TableCell className="text-right font-medium">
-                                ₱{invoice.totalAmount.toFixed(2)}
-                              </TableCell>
-                              <TableCell>
-                                <div className="flex justify-center">
-                                  <DropdownMenu
-                                    open={openMenuId === invoice._id}
-                                    onOpenChange={(open) => {
-                                      setOpenMenuId(open ? invoice._id : null)
-                                    }}
-                                  >
-                                    <DropdownMenuTrigger asChild>
-                                      <Button variant="ghost" size="icon">
-                                        <MoreHorizontal className="h-4 w-4" />
-                                        <span className="sr-only">Open menu</span>
-                                      </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end">
-                                      <DropdownMenuItem
-                                        onClick={() => {
-                                          handleView(invoice)
-                                          setOpenMenuId(null)
-                                        }}
-                                      >
-                                        <Eye className="h-4 w-4 mr-2" />
-                                        View
-                                      </DropdownMenuItem>
-                                      <DropdownMenuItem
-                                        onClick={() => {
-                                          handlePrint(invoice)
-                                          setOpenMenuId(null)
-                                        }}
-                                      >
-                                        <Printer className="h-4 w-4 mr-2" />
-                                        Print
-                                      </DropdownMenuItem>
-                                      <DropdownMenuSeparator />
-                                      {invoice.status !== "paid" && invoice.status !== "cancelled" && (
+                            </TableRow>
+                          ) : (
+                            currentInvoices.map((invoice) => (
+                              <TableRow key={invoice._id} className="hover:bg-muted/30">
+                                <TableCell className="font-medium">{invoice.invoiceNumber}</TableCell>
+                                <TableCell>
+                                  <div className="max-w-[150px] truncate">{invoice.customer}</div>
+                                  <div className="text-sm text-muted-foreground truncate">{invoice.email}</div>
+                                </TableCell>
+                                <TableCell className="hidden sm:table-cell">{formatDate(invoice.createdAt)}</TableCell>
+                                <TableCell className="hidden md:table-cell">{formatDate(invoice.dueDate)}</TableCell>
+                                <TableCell>{renderStatusBadge(invoice.status)}</TableCell>
+                                <TableCell className="text-right font-medium">
+                                  ₱{invoice.totalAmount.toFixed(2)}
+                                </TableCell>
+                                <TableCell>
+                                  <div className="flex justify-center">
+                                    <DropdownMenu
+                                      open={openMenuId === invoice._id}
+                                      onOpenChange={(open) => {
+                                        setOpenMenuId(open ? invoice._id : null)
+                                      }}
+                                    >
+                                      <DropdownMenuTrigger asChild>
+                                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                                          <MoreHorizontal className="h-4 w-4" />
+                                          <span className="sr-only">Open menu</span>
+                                        </Button>
+                                      </DropdownMenuTrigger>
+                                      <DropdownMenuContent align="end" className="w-[180px]">
                                         <DropdownMenuItem
                                           onClick={() => {
-                                            handlePayment(invoice)
+                                            handleView(invoice)
                                             setOpenMenuId(null)
                                           }}
                                         >
-                                          <CreditCard className="h-4 w-4 mr-2" />
-                                          Pay Invoice
+                                          <Eye className="h-4 w-4 mr-2" />
+                                          View
                                         </DropdownMenuItem>
-                                      )}
-                                      <DropdownMenuItem
-                                        onClick={() => {
-                                          handleDownload(invoice)
-                                          setOpenMenuId(null)
-                                        }}
-                                      >
-                                        <Download className="h-4 w-4 mr-2" />
-                                        Download PDF
-                                      </DropdownMenuItem>
-                                      <DropdownMenuSeparator />
-                                      <DropdownMenuItem
-                                        onClick={() => {
-                                          if (window.confirm("Are you sure you want to delete this invoice?")) {
-                                            handleDeleteInvoice(invoice._id)
-                                          }
-                                          setOpenMenuId(null)
-                                        }}
-                                        className="text-red-600"
-                                      >
-                                        <Trash2 className="h-4 w-4 mr-2" />
-                                        Delete
-                                      </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                  </DropdownMenu>
-                                </div>
-                              </TableCell>
-                            </TableRow>
-                          ))
-                        )}
-                      </TableBody>
-                    </Table>
+                                        <DropdownMenuItem
+                                          onClick={() => {
+                                            handlePrint(invoice)
+                                            setOpenMenuId(null)
+                                          }}
+                                        >
+                                          <Printer className="h-4 w-4 mr-2" />
+                                          Print
+                                        </DropdownMenuItem>
+                                        <DropdownMenuSeparator />
+                                        {invoice.status !== "paid" && invoice.status !== "cancelled" && (
+                                          <DropdownMenuItem
+                                            onClick={() => {
+                                              handlePayment(invoice)
+                                              setOpenMenuId(null)
+                                            }}
+                                          >
+                                            <CreditCard className="h-4 w-4 mr-2" />
+                                            Pay Invoice
+                                          </DropdownMenuItem>
+                                        )}
+                                        <DropdownMenuItem
+                                          onClick={() => {
+                                            handleDownload(invoice)
+                                            setOpenMenuId(null)
+                                          }}
+                                        >
+                                          <Download className="h-4 w-4 mr-2" />
+                                          Download PDF
+                                        </DropdownMenuItem>
+                                        <DropdownMenuSeparator />
+                                        <DropdownMenuItem
+                                          onClick={() => {
+                                            setInvoiceToDelete(invoice._id)
+                                            setIsDeleteDialogOpen(true)
+                                            setOpenMenuId(null)
+                                          }}
+                                          className="text-red-600"
+                                        >
+                                          <Trash2 className="h-4 w-4 mr-2" />
+                                          Delete
+                                        </DropdownMenuItem>
+                                      </DropdownMenuContent>
+                                    </DropdownMenu>
+                                  </div>
+                                </TableCell>
+                              </TableRow>
+                            ))
+                          )}
+                        </TableBody>
+                      </Table>
+                    </div>
                   </div>
                 </div>
               )}
             </CardContent>
 
-            <CardFooter className="flex flex-col sm:flex-row justify-between items-center gap-4">
+            <CardFooter className="flex flex-col sm:flex-row justify-between items-center gap-4 px-4 sm:px-6 py-4 sm:py-6 border-t">
               <div className="text-sm text-muted-foreground">
                 Showing {filteredInvoices.length > 0 ? indexOfFirstItem + 1 : 0} to{" "}
                 {Math.min(indexOfLastItem, filteredInvoices.length)} of {filteredInvoices.length} invoices
               </div>
               <div className="flex gap-2">
-                <Button variant="outline" size="sm" onClick={goToPreviousPage} disabled={currentPage === 1}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={goToPreviousPage}
+                  disabled={currentPage === 1}
+                  className="h-9"
+                >
                   <ChevronLeft className="h-4 w-4 mr-1 sm:mr-0" />
                   <span className="sm:hidden">Previous</span>
                 </Button>
@@ -573,6 +582,7 @@ export default function InvoiceManagement() {
                   size="sm"
                   onClick={goToNextPage}
                   disabled={currentPage === totalPages || totalPages === 0}
+                  className="h-9"
                 >
                   <span className="sm:hidden">Next</span>
                   <ChevronRight className="h-4 w-4 ml-1 sm:ml-0" />
@@ -583,24 +593,29 @@ export default function InvoiceManagement() {
         </TabsContent>
 
         <TabsContent value="repository">
-          <Card>
-            <CardHeader>
-              <CardTitle>Invoice Repository</CardTitle>
-              <CardDescription>Archive and storage of all invoices.</CardDescription>
+          <Card className="border shadow-sm">
+            <CardHeader className="px-4 sm:px-6 py-4 sm:py-6">
+              <CardTitle className="text-xl sm:text-2xl">Invoice Repository</CardTitle>
+              <CardDescription className="text-sm sm:text-base mt-1">
+                Archive and storage of all invoices.
+              </CardDescription>
             </CardHeader>
 
-            <CardContent>
+            <CardContent className="px-4 sm:px-6 py-2 sm:py-4">
               {isLoading ? (
                 <div className="flex justify-center items-center h-24">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
                   {invoices.length === 0 ? (
-                    <div className="col-span-3 text-center py-8">No invoices found in the repository.</div>
+                    <div className="col-span-full text-center py-8">No invoices found in the repository.</div>
                   ) : (
-                    invoices.slice(0, 9).map((invoice) => (
-                      <Card key={invoice._id} className="overflow-hidden">
+                    invoices.slice(0, 12).map((invoice) => (
+                      <Card
+                        key={invoice._id}
+                        className="overflow-hidden border shadow-sm hover:shadow transition-shadow"
+                      >
                         <CardHeader className="p-4">
                           <CardTitle className="text-lg">{invoice.invoiceNumber}</CardTitle>
                           <CardDescription className="truncate">{invoice.customer}</CardDescription>
@@ -619,18 +634,18 @@ export default function InvoiceManagement() {
                             <span>{formatDate(invoice.createdAt)}</span>
                           </div>
                         </CardContent>
-                        <CardFooter className="p-4 bg-muted/50 flex justify-between">
-                          <Button variant="ghost" size="sm" onClick={() => handleView(invoice)}>
+                        <CardFooter className="p-4 bg-muted/50 flex justify-between border-t">
+                          <Button variant="ghost" size="sm" onClick={() => handleView(invoice)} className="h-9">
                             <Eye className="h-4 w-4 mr-2" />
                             View
                           </Button>
                           {invoice.status !== "paid" && invoice.status !== "cancelled" ? (
-                            <Button variant="ghost" size="sm" onClick={() => handlePayment(invoice)}>
+                            <Button variant="ghost" size="sm" onClick={() => handlePayment(invoice)} className="h-9">
                               <CreditCard className="h-4 w-4 mr-2" />
                               Pay
                             </Button>
                           ) : (
-                            <Button variant="ghost" size="sm" onClick={() => handleDownload(invoice)}>
+                            <Button variant="ghost" size="sm" onClick={() => handleDownload(invoice)} className="h-9">
                               <Download className="h-4 w-4 mr-2" />
                               Download
                             </Button>
@@ -646,61 +661,63 @@ export default function InvoiceManagement() {
         </TabsContent>
 
         <TabsContent value="payments">
-          <Card>
-            <CardHeader>
-              <CardTitle>Payment History</CardTitle>
-              <CardDescription>View all payment transactions.</CardDescription>
+          <Card className="border shadow-sm">
+            <CardHeader className="px-4 sm:px-6 py-4 sm:py-6">
+              <CardTitle className="text-xl sm:text-2xl">Payment History</CardTitle>
+              <CardDescription className="text-sm sm:text-base mt-1">View all payment transactions.</CardDescription>
             </CardHeader>
 
-            <CardContent>
+            <CardContent className="px-4 sm:px-6 py-2 sm:py-4">
               {isLoading ? (
                 <div className="flex justify-center items-center h-24">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
                 </div>
               ) : (
-                <div className="overflow-x-auto">
-                  <div className="rounded-md border min-w-[700px]">
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Transaction ID</TableHead>
-                          <TableHead>Invoice #</TableHead>
-                          <TableHead className="hidden sm:table-cell">Customer</TableHead>
-                          <TableHead>Date</TableHead>
-                          <TableHead className="hidden md:table-cell">Payment Method</TableHead>
-                          <TableHead className="text-right">Amount</TableHead>
-                          <TableHead>Status</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {invoices
-                          .filter((invoice) => invoice.status === "paid")
-                          .map((invoice) => (
-                            <TableRow key={`payment-${invoice._id}`}>
-                              <TableCell className="font-medium">{`TRX-${invoice._id.substring(0, 8)}`}</TableCell>
-                              <TableCell>{invoice.invoiceNumber}</TableCell>
-                              <TableCell className="hidden sm:table-cell truncate max-w-[150px]">
-                                {invoice.customer}
-                              </TableCell>
-                              <TableCell>{formatDate(invoice.createdAt)}</TableCell>
-                              <TableCell className="hidden md:table-cell">Credit Card</TableCell>
-                              <TableCell className="text-right font-medium">
-                                ₱{invoice.totalAmount.toFixed(2)}
-                              </TableCell>
-                              <TableCell>
-                                <Badge className="bg-green-500 hover:bg-green-600">Completed</Badge>
+                <div className="overflow-x-auto -mx-4 sm:-mx-6">
+                  <div className="inline-block min-w-full align-middle px-4 sm:px-6">
+                    <div className="overflow-hidden border rounded-lg">
+                      <Table>
+                        <TableHeader>
+                          <TableRow className="bg-muted/50">
+                            <TableHead className="font-semibold">Transaction ID</TableHead>
+                            <TableHead className="font-semibold">Invoice #</TableHead>
+                            <TableHead className="hidden sm:table-cell font-semibold">Customer</TableHead>
+                            <TableHead className="font-semibold">Date</TableHead>
+                            <TableHead className="hidden md:table-cell font-semibold">Payment Method</TableHead>
+                            <TableHead className="text-right font-semibold">Amount</TableHead>
+                            <TableHead className="font-semibold">Status</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {invoices
+                            .filter((invoice) => invoice.status === "paid")
+                            .map((invoice) => (
+                              <TableRow key={`payment-${invoice._id}`} className="hover:bg-muted/30">
+                                <TableCell className="font-medium">{`TRX-${invoice._id.substring(0, 8)}`}</TableCell>
+                                <TableCell>{invoice.invoiceNumber}</TableCell>
+                                <TableCell className="hidden sm:table-cell truncate max-w-[150px]">
+                                  {invoice.customer}
+                                </TableCell>
+                                <TableCell>{formatDate(invoice.createdAt)}</TableCell>
+                                <TableCell className="hidden md:table-cell">Credit Card</TableCell>
+                                <TableCell className="text-right font-medium">
+                                  ₱{invoice.totalAmount.toFixed(2)}
+                                </TableCell>
+                                <TableCell>
+                                  <Badge className="bg-green-500 hover:bg-green-600">Completed</Badge>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          {invoices.filter((invoice) => invoice.status === "paid").length === 0 && (
+                            <TableRow>
+                              <TableCell colSpan={7} className="h-24 text-center">
+                                No payment transactions found.
                               </TableCell>
                             </TableRow>
-                          ))}
-                        {invoices.filter((invoice) => invoice.status === "paid").length === 0 && (
-                          <TableRow>
-                            <TableCell colSpan={7} className="h-24 text-center">
-                              No payment transactions found.
-                            </TableCell>
-                          </TableRow>
-                        )}
-                      </TableBody>
-                    </Table>
+                          )}
+                        </TableBody>
+                      </Table>
+                    </div>
                   </div>
                 </div>
               )}
@@ -711,9 +728,9 @@ export default function InvoiceManagement() {
 
       {/* View Invoice Dialog */}
       <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto w-[95vw] sm:w-[85vw] md:w-[80vw] lg:w-auto">
           <DialogHeader>
-            <DialogTitle>Invoice {selectedInvoice?.invoiceNumber}</DialogTitle>
+            <DialogTitle className="text-xl">Invoice {selectedInvoice?.invoiceNumber}</DialogTitle>
             <DialogDescription>Invoice details and line items.</DialogDescription>
           </DialogHeader>
 
@@ -742,27 +759,31 @@ export default function InvoiceManagement() {
                 </div>
               </div>
 
-              <div className="overflow-x-auto border rounded-md mb-6">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Description</TableHead>
-                      <TableHead className="text-right">Qty</TableHead>
-                      <TableHead className="text-right">Price</TableHead>
-                      <TableHead className="text-right">Total</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {selectedInvoice.items.map((item, index) => (
-                      <TableRow key={index}>
-                        <TableCell className="max-w-[200px] break-words">{item.description}</TableCell>
-                        <TableCell className="text-right">{item.quantity}</TableCell>
-                        <TableCell className="text-right">₱{item.amount.toFixed(2)}</TableCell>
-                        <TableCell className="text-right">₱{(item.quantity * item.amount).toFixed(2)}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+              <div className="overflow-x-auto -mx-4 sm:-mx-6 md:mx-0">
+                <div className="inline-block min-w-full align-middle px-4 sm:px-6 md:px-0">
+                  <div className="overflow-hidden border rounded-md mb-6">
+                    <Table>
+                      <TableHeader>
+                        <TableRow className="bg-muted/50">
+                          <TableHead className="font-semibold w-[50%]">Description</TableHead>
+                          <TableHead className="text-right font-semibold w-[15%]">Qty</TableHead>
+                          <TableHead className="text-right font-semibold w-[15%]">Price</TableHead>
+                          <TableHead className="text-right font-semibold w-[20%]">Total</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {selectedInvoice.items.map((item, index) => (
+                          <TableRow key={index}>
+                            <TableCell className="max-w-[200px] break-words">{item.description}</TableCell>
+                            <TableCell className="text-right">{item.quantity}</TableCell>
+                            <TableCell className="text-right">₱{item.amount.toFixed(2)}</TableCell>
+                            <TableCell className="text-right">₱{(item.quantity * item.amount).toFixed(2)}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </div>
               </div>
 
               <div className="flex justify-end">
@@ -784,14 +805,14 @@ export default function InvoiceManagement() {
             </div>
           )}
 
-          <DialogFooter className="flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 pt-4">
-            <Button variant="outline" onClick={() => setIsViewDialogOpen(false)} className="w-full sm:w-auto">
+          <DialogFooter className="flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 pt-4 border-t mt-4">
+            <Button variant="outline" onClick={() => setIsViewDialogOpen(false)} className="w-full sm:w-auto h-10">
               Close
             </Button>
             <Button
               variant="outline"
               onClick={() => selectedInvoice && handlePrint(selectedInvoice)}
-              className="w-full sm:w-auto"
+              className="w-full sm:w-auto h-10"
             >
               <Printer className="h-4 w-4 mr-2" />
               Print
@@ -802,7 +823,7 @@ export default function InvoiceManagement() {
                   setIsViewDialogOpen(false)
                   handlePayment(selectedInvoice)
                 }}
-                className="w-full sm:w-auto"
+                className="w-full sm:w-auto h-10"
               >
                 <CreditCard className="h-4 w-4 mr-2" />
                 Pay Now
@@ -811,7 +832,7 @@ export default function InvoiceManagement() {
             <Button
               onClick={() => selectedInvoice && handleDownload(selectedInvoice)}
               disabled={isPdfGenerating}
-              className="w-full sm:w-auto"
+              className="w-full sm:w-auto h-10"
             >
               <Download className="h-4 w-4 mr-2" />
               {isPdfGenerating ? "Generating..." : "Download PDF"}
@@ -822,64 +843,78 @@ export default function InvoiceManagement() {
 
       {/* Create Invoice Dialog */}
       <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto w-[95vw] sm:w-[85vw] md:w-[80vw] lg:w-auto p-4 sm:p-6">
           <DialogHeader>
-            <DialogTitle>Create New Invoice</DialogTitle>
+            <DialogTitle className="text-xl">Create New Invoice</DialogTitle>
             <DialogDescription>Fill in the details to create a new invoice.</DialogDescription>
           </DialogHeader>
 
-          <div className="grid gap-6 py-4">
+          <div className="grid gap-4 sm:gap-6 py-2 sm:py-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="customer-name">Customer Name</Label>
+                <Label htmlFor="customer-name" className="text-sm font-medium">
+                  Customer Name
+                </Label>
                 <Input
                   id="customer-name"
                   placeholder="Enter customer name"
                   value={newInvoice.customer || ""}
                   onChange={(e) => setNewInvoice({ ...newInvoice, customer: e.target.value })}
+                  className="h-10"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="customer-email">Customer Email</Label>
+                <Label htmlFor="customer-email" className="text-sm font-medium">
+                  Customer Email
+                </Label>
                 <Input
                   id="customer-email"
                   type="email"
                   placeholder="Enter customer email"
                   value={newInvoice.email || ""}
                   onChange={(e) => setNewInvoice({ ...newInvoice, email: e.target.value })}
+                  className="h-10"
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="issue-date">Issue Date</Label>
+                <Label htmlFor="issue-date" className="text-sm font-medium">
+                  Issue Date
+                </Label>
                 <Input
                   id="issue-date"
                   type="date"
                   value={newInvoice.createdAt ? new Date(newInvoice.createdAt).toISOString().split("T")[0] : ""}
                   onChange={(e) => setNewInvoice({ ...newInvoice, createdAt: new Date(e.target.value).toISOString() })}
+                  className="h-10"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="due-date">Due Date</Label>
+                <Label htmlFor="due-date" className="text-sm font-medium">
+                  Due Date
+                </Label>
                 <Input
                   id="due-date"
                   type="date"
                   value={newInvoice.dueDate ? new Date(newInvoice.dueDate).toISOString().split("T")[0] : ""}
                   onChange={(e) => setNewInvoice({ ...newInvoice, dueDate: new Date(e.target.value).toISOString() })}
+                  className="h-10"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="status">Status</Label>
+                <Label htmlFor="status" className="text-sm font-medium">
+                  Status
+                </Label>
                 <Select
                   value={newInvoice.status || "draft"}
                   onValueChange={(value) => setNewInvoice({ ...newInvoice, status: value as any })}
                 >
-                  <SelectTrigger id="status">
+                  <SelectTrigger id="status" className="h-10">
                     <SelectValue placeholder="Select status" />
                   </SelectTrigger>
                   <SelectContent>
@@ -893,81 +928,85 @@ export default function InvoiceManagement() {
               </div>
             </div>
 
-            <div className="space-y-2">
-              <div className="flex justify-between items-center">
-                <Label>Invoice Items</Label>
-                <Button type="button" variant="outline" size="sm" onClick={addInvoiceItem}>
+            <div className="space-y-2 pt-2">
+              <div className="flex justify-between items-center mb-2">
+                <Label className="text-base font-medium">Invoice Items</Label>
+                <Button type="button" variant="outline" size="sm" onClick={addInvoiceItem} className="h-9 px-3">
                   <Plus className="h-4 w-4 mr-2" />
-                  Add Item
+                  <span>Add Item</span>
                 </Button>
               </div>
 
-              <div className="overflow-x-auto">
-                <div className="border rounded-md min-w-[600px]">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Description</TableHead>
-                        <TableHead className="text-right">Quantity</TableHead>
-                        <TableHead className="text-right">Unit Price (₱)</TableHead>
-                        <TableHead className="text-right">Total</TableHead>
-                        <TableHead></TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {newInvoice.items?.map((item, index) => (
-                        <TableRow key={index}>
-                          <TableCell>
-                            <Input
-                              placeholder="Item description"
-                              value={item.description}
-                              onChange={(e) => updateInvoiceItem(index, "description", e.target.value)}
-                            />
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <Input
-                              type="number"
-                              min="1"
-                              className="w-20 ml-auto"
-                              value={item.quantity}
-                              onChange={(e) => updateInvoiceItem(index, "quantity", e.target.value)}
-                            />
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <Input
-                              type="number"
-                              min="0"
-                              step="0.01"
-                              className="w-24 ml-auto"
-                              value={item.amount}
-                              onChange={(e) => updateInvoiceItem(index, "amount", e.target.value)}
-                            />
-                          </TableCell>
-                          <TableCell className="text-right font-medium">
-                            ₱{(item.quantity * item.amount).toFixed(2)}
-                          </TableCell>
-                          <TableCell>
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => removeInvoiceItem(index)}
-                              disabled={newInvoice.items?.length === 1}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                              <span className="sr-only">Remove item</span>
-                            </Button>
-                          </TableCell>
+              <div className="overflow-x-auto -mx-4 sm:-mx-6 md:mx-0">
+                <div className="inline-block min-w-full align-middle px-4 sm:px-6 md:px-0">
+                  <div className="border rounded-md my-2 overflow-hidden">
+                    <Table>
+                      <TableHeader>
+                        <TableRow className="bg-muted/50">
+                          <TableHead className="font-semibold w-[40%]">Description</TableHead>
+                          <TableHead className="text-right font-semibold w-[15%]">Qty</TableHead>
+                          <TableHead className="text-right font-semibold w-[20%]">Price (₱)</TableHead>
+                          <TableHead className="text-right font-semibold w-[20%]">Total</TableHead>
+                          <TableHead className="w-[5%]"></TableHead>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+                      </TableHeader>
+                      <TableBody>
+                        {newInvoice.items?.map((item, index) => (
+                          <TableRow key={index}>
+                            <TableCell>
+                              <Input
+                                placeholder="Item description"
+                                value={item.description}
+                                onChange={(e) => updateInvoiceItem(index, "description", e.target.value)}
+                                className="w-full h-9"
+                              />
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <Input
+                                type="number"
+                                min="1"
+                                className="w-full h-9 text-right"
+                                value={item.quantity}
+                                onChange={(e) => updateInvoiceItem(index, "quantity", e.target.value)}
+                              />
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <Input
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                className="w-full h-9 text-right"
+                                value={item.amount}
+                                onChange={(e) => updateInvoiceItem(index, "amount", e.target.value)}
+                              />
+                            </TableCell>
+                            <TableCell className="text-right font-medium">
+                              ₱{(item.quantity * item.amount).toFixed(2)}
+                            </TableCell>
+                            <TableCell>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => removeInvoiceItem(index)}
+                                disabled={newInvoice.items?.length === 1}
+                                className="h-8 w-8"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                                <span className="sr-only">Remove item</span>
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="flex justify-end">
-              <div className="w-full sm:w-1/2 md:w-1/3">
+            <div className="flex justify-end mt-4">
+              <div className="w-full sm:w-2/3 md:w-1/2 lg:w-1/3">
                 <div className="flex justify-between py-2 border-b">
                   <span className="font-medium">Subtotal:</span>
                   <span>₱{newInvoice.totalAmount?.toFixed(2) || "0.00"}</span>
@@ -983,17 +1022,24 @@ export default function InvoiceManagement() {
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="notes">Notes</Label>
-              <Textarea id="notes" placeholder="Additional notes or payment instructions" rows={3} />
+            <div className="space-y-2 mt-4">
+              <Label htmlFor="notes" className="text-base font-medium">
+                Notes
+              </Label>
+              <Textarea
+                id="notes"
+                placeholder="Additional notes or payment instructions"
+                rows={3}
+                className="resize-none"
+              />
             </div>
           </div>
 
-          <DialogFooter className="flex flex-col sm:flex-row gap-2">
-            <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)} className="w-full sm:w-auto">
+          <DialogFooter className="flex flex-col sm:flex-row gap-2 mt-4 pt-4 border-t">
+            <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)} className="w-full sm:w-auto h-10">
               Cancel
             </Button>
-            <Button onClick={handleCreateInvoice} disabled={isLoading} className="w-full sm:w-auto">
+            <Button onClick={handleCreateInvoice} disabled={isLoading} className="w-full sm:w-auto h-10">
               {isLoading ? "Creating..." : "Create Invoice"}
             </Button>
           </DialogFooter>
@@ -1008,9 +1054,9 @@ export default function InvoiceManagement() {
           setIsPaymentDialogOpen(open)
         }}
       >
-        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto w-[95vw] sm:w-auto">
           <DialogHeader>
-            <DialogTitle>
+            <DialogTitle className="text-xl">
               {paymentSuccess ? "Payment Successful" : `Pay Invoice ${selectedInvoice?.invoiceNumber}`}
             </DialogTitle>
             <DialogDescription>
@@ -1035,7 +1081,7 @@ export default function InvoiceManagement() {
           ) : (
             <div className="py-4">
               {selectedInvoice && (
-                <div className="mb-6">
+                <div className="mb-6 border rounded-md p-4 bg-muted/30">
                   <div className="flex justify-between py-2 border-b">
                     <span className="font-medium">Invoice Number:</span>
                     <span>{selectedInvoice.invoiceNumber}</span>
@@ -1057,7 +1103,7 @@ export default function InvoiceManagement() {
 
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label>Payment Method</Label>
+                  <Label className="text-base font-medium">Payment Method</Label>
                   <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod} className="grid grid-cols-2 gap-4">
                     <div>
                       <RadioGroupItem value="credit-card" id="credit-card" className="peer sr-only" />
@@ -1076,49 +1122,61 @@ export default function InvoiceManagement() {
                         htmlFor="gcash"
                         className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
                       >
-                        <img src={gcashImage || "/placeholder.svg"} alt="gcash" className="h-6 w-auto" />
+                        <img src={gcashImage || "/placeholder.svg"} alt="gcash" className="h-14 w-auto" />
                       </Label>
                     </div>
                   </RadioGroup>
                 </div>
 
                 {paymentMethod === "credit-card" && (
-                  <div className="space-y-4">
+                  <div className="space-y-4 mt-4">
                     <div className="space-y-2">
-                      <Label htmlFor="card-number">Card Number</Label>
+                      <Label htmlFor="card-number" className="text-sm font-medium">
+                        Card Number
+                      </Label>
                       <Input
                         id="card-number"
                         placeholder="1234 5678 9012 3456"
                         value={cardDetails.cardNumber}
                         onChange={(e) => setCardDetails({ ...cardDetails, cardNumber: e.target.value })}
+                        className="h-10"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="card-holder">Card Holder Name</Label>
+                      <Label htmlFor="card-holder" className="text-sm font-medium">
+                        Card Holder Name
+                      </Label>
                       <Input
                         id="card-holder"
                         placeholder="John Doe"
                         value={cardDetails.cardHolder}
                         onChange={(e) => setCardDetails({ ...cardDetails, cardHolder: e.target.value })}
+                        className="h-10"
                       />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="expiry-date">Expiry Date</Label>
+                        <Label htmlFor="expiry-date" className="text-sm font-medium">
+                          Expiry Date
+                        </Label>
                         <Input
                           id="expiry-date"
                           placeholder="MM/YY"
                           value={cardDetails.expiryDate}
                           onChange={(e) => setCardDetails({ ...cardDetails, expiryDate: e.target.value })}
+                          className="h-10"
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="cvv">CVV</Label>
+                        <Label htmlFor="cvv" className="text-sm font-medium">
+                          CVV
+                        </Label>
                         <Input
                           id="cvv"
                           placeholder="123"
                           value={cardDetails.cvv}
                           onChange={(e) => setCardDetails({ ...cardDetails, cvv: e.target.value })}
+                          className="h-10"
                         />
                       </div>
                     </div>
@@ -1126,7 +1184,7 @@ export default function InvoiceManagement() {
                 )}
 
                 {paymentMethod === "gcash" && (
-                  <div className="space-y-4">
+                  <div className="space-y-4 mt-4">
                     <div className="rounded-md bg-muted p-4">
                       <h4 className="font-medium mb-2">GCash Payment</h4>
                       <p className="text-sm text-muted-foreground">
@@ -1139,21 +1197,55 @@ export default function InvoiceManagement() {
             </div>
           )}
 
-          <DialogFooter className="flex flex-col sm:flex-row gap-2">
+          <DialogFooter className="flex flex-col sm:flex-row gap-2 mt-4 pt-4 border-t">
             {paymentSuccess ? (
-              <Button onClick={() => setIsPaymentDialogOpen(false)} className="w-full sm:w-auto">
+              <Button onClick={() => setIsPaymentDialogOpen(false)} className="w-full sm:w-auto h-10">
                 Close
               </Button>
             ) : (
               <>
-                <Button variant="outline" onClick={() => setIsPaymentDialogOpen(false)} className="w-full sm:w-auto">
+                <Button
+                  variant="outline"
+                  onClick={() => setIsPaymentDialogOpen(false)}
+                  className="w-full sm:w-auto h-10"
+                >
                   Cancel
                 </Button>
-                <Button onClick={processPayment} disabled={isLoading} className="w-full sm:w-auto">
+                <Button onClick={processPayment} disabled={isLoading} className="w-full sm:w-auto h-10">
                   {isLoading ? "Processing..." : paymentMethod === "gcash" ? "Pay with GCash" : "Complete Payment"}
                 </Button>
               </>
             )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent className="max-w-md w-[95vw] sm:w-auto">
+          <DialogHeader>
+            <DialogTitle className="text-xl">Confirm Deletion</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this invoice? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex flex-col sm:flex-row gap-2 mt-4 pt-4 border-t">
+            <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)} className="w-full sm:w-auto h-10">
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => {
+                if (invoiceToDelete) {
+                  handleDeleteInvoice(invoiceToDelete)
+                  setInvoiceToDelete(null)
+                }
+                setIsDeleteDialogOpen(false)
+              }}
+              className="w-full sm:w-auto h-10"
+            >
+              Delete Invoice
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

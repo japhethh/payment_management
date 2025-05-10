@@ -119,38 +119,7 @@ export default function Sidebar() {
               </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem value="item-2" className="border-b-0">
-              <AccordionTrigger className="py-2 px-3 hover:no-underline rounded-md hover:bg-muted">
-                <div className="flex items-center gap-2">
-                  <FileText className="h-4 w-4" />
-                  <span>Content</span>
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="pb-0 pl-8">
-                <div className="flex flex-col space-y-1 mt-1">
-                  <NavLink
-                    to="/posts"
-                    className={({ isActive }) =>
-                      `flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive ? activeLinkClass : defaultLinkClass
-                      }`
-                    }
-                    onClick={() => isMobile && setIsOpen(false)}
-                  >
-                    Posts
-                  </NavLink>
-                  <NavLink
-                    to="/media"
-                    className={({ isActive }) =>
-                      `flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive ? activeLinkClass : defaultLinkClass
-                      }`
-                    }
-                    onClick={() => isMobile && setIsOpen(false)}
-                  >
-                    Media
-                  </NavLink>
-                </div>
-              </AccordionContent>
-            </AccordionItem>
+    
           </Accordion>
         ) : (
           // Icon-only view for collapsed sidebar
