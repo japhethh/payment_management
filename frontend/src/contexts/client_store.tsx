@@ -13,7 +13,7 @@ interface StoreState {
 export const apiURL =
   window.location.hostname === "localhost"
     ? "http://localhost:3000"
-    : "your-production-url-here";
+    : "https://payment-management-api.onrender.com";
 
 const useStore = create<StoreState>((set) => ({
   token: localStorage.getItem("token"),
