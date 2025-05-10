@@ -1,5 +1,6 @@
 // src/context/AuthContext.tsx
 import { createContext, useContext, useEffect, useState } from 'react';
+import { apiURL } from './AuthStore';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -32,7 +33,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         throw new Error('No token found');
       }
 
-      const response = await fetch('http://localhost:3000/api/auth/check', {
+      const response = await fetch(`${apiURL}/api/auth/check`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
