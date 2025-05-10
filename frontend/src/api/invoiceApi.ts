@@ -1,7 +1,8 @@
 import axios from "axios";
 import { Invoice, CreateInvoiceDto, UpdateInvoiceDto } from "@/types";
+import { apiURL } from "@/contexts/AuthStore";
 
-const API_URL = "http://localhost:3000/api/invoices";
+const API_URL = `${apiURL}/api/invoices`
 
 // Get auth token from localStorage
 const getAuthToken = () => localStorage.getItem("token");
