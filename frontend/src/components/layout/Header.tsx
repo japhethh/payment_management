@@ -1,3 +1,5 @@
+"use client"
+
 import type React from "react"
 
 import { Button } from "@/components/ui/button"
@@ -22,10 +24,10 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useEffect, useState } from "react"
-import store, { apiURL } from "@/contexts/client_store"
 import axios from "axios"
-import toast, { Toaster } from "react-hot-toast"
 
+// Assuming you have a store or context for user data
+// If not, you can modify this to use local state or props
 const Header = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
@@ -34,10 +36,21 @@ const Header = () => {
     name: "",
     email: "",
   })
-  const { fetchUserData, userData, token } = store()
+
+  // Replace with your actual data fetching logic
+  const [userData, setUserData] = useState<any>(null)
+  const [token, setToken] = useState<string | null>(null)
 
   useEffect(() => {
-    fetchUserData()
+    // Get token from localStorage
+    const storedToken = localStorage.getItem("token")
+    setToken(storedToken)
+
+    // Get user data from localStorage or fetch from API
+    const storedUser = localStorage.getItem("user")
+    if (storedUser) {
+      setUserData(JSON.parse(storedUser))
+    }
   }, [])
 
   useEffect(() => {
@@ -69,14 +82,16 @@ const Header = () => {
   }
 
   const handleSubmit = async () => {
-    console.log(formData)
     setIsSubmitting(true)
 
     try {
       if (!token) {
-        toast.error("No authentication token found")
+        alert("No authentication token found")
         return
       }
+
+      // Replace with your actual API endpoint
+      const apiURL = "https://your-api-url.com"
 
       const response = await axios.post(`${apiURL}/api/user/update/${userData?._id}`, formData, {
         headers: {
@@ -84,27 +99,35 @@ const Header = () => {
         },
       })
 
-      toast.success("Profile updated successfully")
-      fetchUserData() // Refresh user data
+      alert("Profile updated successfully")
+
+      // Update local storage with new user data
+      if (userData) {
+        const updatedUser = { ...userData, ...formData }
+        localStorage.setItem("user", JSON.stringify(updatedUser))
+        setUserData(updatedUser)
+      }
+
       setIsDialogOpen(false)
     } catch (error) {
       console.error("Error updating profile:", error)
-      toast.error("Failed to update profile")
+      alert("Failed to update profile")
     } finally {
       setIsSubmitting(false)
     }
   }
 
   return (
-    <header className="sticky top-0 z-10 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      {/* Add the Toaster component here */}
+    <header className="sticky top-0 z-30 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="w-full">
         <div className="mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
-          {/* Left side */}
-          <div className="flex items-center"></div>
+          {/* Left side - Empty or can contain page title */}
+          <div className="flex items-center md:hidden">
+            {/* Space for mobile menu button which is now in Sidebar component */}
+          </div>
 
           {/* Right side - User controls */}
-          <div className="flex items-center gap-2">
+          <div className="ml-auto flex items-center gap-2">
             {/* Notification button */}
             <Button variant="ghost" size="icon" className="relative">
               <Bell className="h-5 w-5" />

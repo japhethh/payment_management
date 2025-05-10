@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:3000
-@token =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODAyN2RkOGEwNWU4MDBiZGQxNmFhYTYiLCJpYXQiOjE3NDY4ODE1NzgsImV4cCI6MTc0Njg4NTE3OH0.JvlLu09lat6boAGKN5DGi_AYaKEzFpF6z8HpcxA6noE
+@token =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODAyN2RkOGEwNWU4MDBiZGQxNmFhYTYiLCJpYXQiOjE3NDY4OTQ2MzQsImV4cCI6MTc0Njg5ODIzNH0.EMyWPeBZgHJZR_vZjso-waayTPycNqz3eHD_k9XMruo
 @userId = 68027dd8a05e800bdd16aaa6
 
 ### User Management Endpoints
@@ -113,15 +113,14 @@ POST {{baseUrl}}/api/invoices
 Content-Type: application/json  
 Authorization: Bearer {{token}}
 
-{
-  "items": [
-    { "description": "Field Trip - Educational Tour", "amount": 1800, "quantity": 1 }
-  ],
-  "totalAmount": 1800,
-  "status": "draft",
-  "dueDate": "2025-06-20T00:00:00.000Z"
-}
-
+  {
+    "items": [
+      { "description": "Computer Lab Usage Fee", "amount": 600, "quantity": 1 }
+    ],
+    "totalAmount": 600,
+    "status": "draft",
+    "dueDate": "2025-05-30T00:00:00.000Z"
+  }
 ### Generate invoice PDF (if implemented)
 GET {{baseUrl}}/api/invoices/invoice_id_here/pdf
 Authorization: Bearer {{token}}
