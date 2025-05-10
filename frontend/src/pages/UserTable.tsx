@@ -490,7 +490,6 @@ const UserDataTable = () => {
                   <TableHead>ID</TableHead>
                   <TableHead>Name</TableHead>
                   <TableHead>Email</TableHead>
-                  <TableHead>Status</TableHead>
                   <TableHead>Role</TableHead>
                   <TableHead>Created At</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
@@ -506,41 +505,29 @@ const UserDataTable = () => {
                 ) : (
                   currentItems.map((user) => (
                     <TableRow key={user._id}>
-                         <TableCell>
-          {user.image ? (
-            <div className="h-10 w-10 rounded-full overflow-hidden">
-              <img 
-                src={user.image} 
-                alt={user.name} 
-                className="h-full w-full object-cover"
-                onError={(e) => {
-                  // Fallback if image fails to load
-                  (e.target as HTMLImageElement).src = '/path/to/default/image.png';
-                }}
-              />
-            </div>
-          ) : (
-            <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
-              <span className="text-xs text-gray-500">No image</span>
-            </div>
-          )}
-        </TableCell>
+                      <TableCell>
+                        {user.image ? (
+                          <div className="h-10 w-10 rounded-full overflow-hidden">
+                            <img
+                              src={user.image}
+                              alt={user.name}
+                              className="h-full w-full object-cover"
+                              onError={(e) => {
+                                // Fallback if image fails to load
+                                (e.target as HTMLImageElement).src = '/path/to/default/image.png';
+                              }}
+                            />
+                          </div>
+                        ) : (
+                          <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+                            <span className="text-xs text-gray-500">No image</span>
+                          </div>
+                        )}
+                      </TableCell>
                       <TableCell className="font-medium">{user._id.substring(0, 8)}...</TableCell>
                       <TableCell>{user.name}</TableCell>
                       <TableCell>{user.email}</TableCell>
-                      <TableCell>
-                        <Badge
-                          variant={
-                            user.status === "active"
-                              ? "success"
-                              : user.status === "inactive"
-                                ? "destructive"
-                                : "outline"
-                          }
-                        >
-                          {user.status || "N/A"}
-                        </Badge>
-                      </TableCell>
+
                       <TableCell>{user.role || "N/A"}</TableCell>
                       <TableCell>{user.createdAt ? format(new Date(user.createdAt), "PP") : "N/A"}</TableCell>
                       <TableCell className="text-right">

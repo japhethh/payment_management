@@ -18,7 +18,7 @@ interface User {
 export const apiURL =
   window.location.hostname === "localhost"
     ? "http://localhost:3000"
-    : "kupal kaba boss?";
+    : "https://payment-management-api.onrender.com";
 
 
 

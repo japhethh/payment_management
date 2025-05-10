@@ -4,7 +4,6 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 import {
   Form,
   FormControl,
@@ -26,7 +25,7 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 export function LoginPage() {
-  const navigate = useNavigate();
+  
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {

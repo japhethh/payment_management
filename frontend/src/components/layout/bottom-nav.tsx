@@ -1,7 +1,7 @@
 "use client"
 
 import { NavLink } from "react-router-dom"
-import { LayoutDashboard, Users, Calendar, FileText, NotebookText } from "lucide-react"
+import { LayoutDashboard, Users, NotebookText } from "lucide-react"
 
 export default function BottomNav() {
   const activeLinkClass = "text-primary"

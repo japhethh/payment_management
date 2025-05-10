@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { NavLink } from "react-router-dom"
-import { LayoutDashboard, Users, Calendar, FileText, LogOut, Menu, NotebookText, X } from "lucide-react"
+import { LayoutDashboard, Users, Calendar, FileText, LogOut, Menu, NotebookText } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent } from "@/components/ui/sheet"
@@ -32,9 +32,7 @@ export default function Sidebar() {
     return () => window.removeEventListener("resize", checkIfMobile)
   }, [])
 
-  const toggleSidebar = () => {
-    setIsCollapsed(!isCollapsed)
-  }
+
 
   const handleLogout = () => {
     localStorage.removeItem("token")

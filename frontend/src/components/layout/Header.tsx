@@ -93,7 +93,7 @@ const Header = () => {
       // Replace with your actual API endpoint
       const apiURL = "https://your-api-url.com"
 
-      const response = await axios.post(`${apiURL}/api/user/update/${userData?._id}`, formData, {
+      await axios.post(`${apiURL}/api/user/update/${userData?._id}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

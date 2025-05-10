@@ -16,9 +16,7 @@ import NotFoundPage from "./pages/NotFoundPage";
 import UserTable from './pages/UserTable'
 import InvoiceManagement from "./pages/InvoiceManagement";
 import PaymentProcess from "./pages/PaymentProcess";
-import ReportAnalytics from "./pages/ReportAnalytics";
 import PaymentGateway from "./pages/PaymentGateway";
-import ReportingAnalytics from "./pages/ReportingAnalytics";
 
 
 interface AuthRouteProps {

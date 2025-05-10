@@ -39,7 +39,7 @@ export default function RegistrationForm() {
       name: "",
       email: "",
       password: "",
-      role: "",
+      role: undefined,
       confirmPassword: "",
     },
   })
