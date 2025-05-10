@@ -26,6 +26,7 @@ import { Label } from "@/components/ui/label"
 import { useEffect, useState } from "react"
 import axios from "axios"
 import { apiURL } from "@/contexts/AuthStore"
+import toast from "react-hot-toast"
 
 // Assuming you have a store or context for user data
 // If not, you can modify this to use local state or props
@@ -83,7 +84,9 @@ const Header = () => {
   }
 
   const handleSubmit = async () => {
+    console.log(userData)
     setIsSubmitting(true)
+
 
     try {
       if (!token) {
@@ -93,13 +96,13 @@ const Header = () => {
 
       // Replace with your actual API endpoint
 
-      await axios.post(`${apiURL}/api/user/update/${userData?._id}`, formData, {
+      await axios.post(`${apiURL}/api/user/update`, { formData, _id: userData?.id }, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
 
-      alert("Profile updated successfully")
+      toast.success("Profile updated successfully")
 
       // Update local storage with new user data
       if (userData) {
