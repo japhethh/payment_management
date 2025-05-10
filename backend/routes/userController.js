@@ -113,9 +113,9 @@ const testCreate = asyncHandler(async (req, res) => {
 const updateUser = asyncHandler(async (req, res) => {
   try {
     const data = req.body;
-    const { id } = req.params;
+    const { _id } = req.body;
 
-    const updateUser = await userModel.findByIdAndUpdate({ _id: id }, data, {
+    const updateUser = await userModel.findByIdAndUpdate({ _id: _id }, data, {
       new: true,
     });
     if (!updateUser) res.status(404).json({ message: "User not found!" });

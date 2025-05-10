@@ -141,9 +141,10 @@ invoiceRouter.put("/:id", async (req, res) => {
   }
 });
 
-invoiceRouter.delete("/:id", async (req, res) => {
+invoiceRouter.delete("/:id", authMiddleware, async (req, res) => {
   try {
     const userId = req.params.id;
+
     const deleteInvoice = await invoiceModel.findByIdAndDelete(userId);
 
     if (!deleteInvoice) {

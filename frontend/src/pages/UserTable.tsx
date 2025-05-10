@@ -114,12 +114,11 @@ const UserDataTable = () => {
 
   // Add a new function to handle the actual deletion
   const confirmDeleteUser = async () => {
+
     if (!userToDelete) return
 
     try {
-      await axios.post(`${apiURL}/api/user/delete`, {
-        data: { id: userToDelete },
-      })
+      await axios.post(`${apiURL}/api/user/delete`, { id: userToDelete })
       setData(data.filter((user) => user._id !== userToDelete))
       setIsViewDialogOpen(false)
       setIsDeleteDialogOpen(false)
@@ -158,12 +157,13 @@ const UserDataTable = () => {
   }
 
   const handleSaveUser = async () => {
+    console.log(editingUser)
     if (!editingUser) return
 
     try {
       setIsSaving(true)
       // Make API call to update user
-      await axios.put(`${apiURL}/api/user/update`, editingUser)
+      await axios.post(`${apiURL}/api/user/update`, editingUser)
 
       // Update local data
       setData(data.map((user) => (user._id === editingUser._id ? editingUser : user)))
@@ -486,6 +486,7 @@ const UserDataTable = () => {
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead>Image</TableHead>
                   <TableHead>ID</TableHead>
                   <TableHead>Name</TableHead>
                   <TableHead>Email</TableHead>
@@ -505,6 +506,25 @@ const UserDataTable = () => {
                 ) : (
                   currentItems.map((user) => (
                     <TableRow key={user._id}>
+                         <TableCell>
+          {user.image ? (
+            <div className="h-10 w-10 rounded-full overflow-hidden">
+              <img 
+                src={user.image} 
+                alt={user.name} 
+                className="h-full w-full object-cover"
+                onError={(e) => {
+                  // Fallback if image fails to load
+                  (e.target as HTMLImageElement).src = '/path/to/default/image.png';
+                }}
+              />
+            </div>
+          ) : (
+            <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+              <span className="text-xs text-gray-500">No image</span>
+            </div>
+          )}
+        </TableCell>
                       <TableCell className="font-medium">{user._id.substring(0, 8)}...</TableCell>
                       <TableCell>{user.name}</TableCell>
                       <TableCell>{user.email}</TableCell>

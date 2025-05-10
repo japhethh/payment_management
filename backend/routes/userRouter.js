@@ -25,7 +25,7 @@ userRouter.post("/get", getUsers);
 userRouter.post("/getId", authMiddleware, getUserId);
 userRouter.post("/create", createUser);
 userRouter.post("/testCreate", upload.single("image"), testCreate);
-userRouter.post("/update/:id", updateUser);
+userRouter.post("/update/", updateUser);
 //
 userRouter.post("/delete", deleteUser);
 

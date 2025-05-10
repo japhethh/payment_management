@@ -2,6 +2,7 @@ import userModel from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import expressAsyncHandler from "express-async-handler";
 import jwt from "jsonwebtoken";
+import { registerService } from "../services/authServices.js";
 
 // Register a new user
 export const register = async (req, res) => {
@@ -18,6 +19,35 @@ export const register = async (req, res) => {
 
     await newUser.save();
     res.status(201).json({ message: "User registered successfully!" });
+  } catch (error) {
+    res.status(500).json({ error: "Registration failed" });
+  }
+};
+
+export const registerTest = expressAsyncHandler(async (req, res) => {
+  const registeredUser = registerService(req.body);
+
+  res.status(201).json({
+    status: "success",
+    message: "Register Successfully",
+    user: registeredUser,
+  });
+});
+
+export const update = async (req, res) => {
+  try {
+    const user = req.user;
+    const updated = await userModel.findByIdAndUpdate(user, req.body, {
+      new: true,
+    });
+
+    if (!updated) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found!" });
+    }
+
+    res.status(200).json(updated);
   } catch (error) {
     res.status(500).json({ error: "Registration failed" });
   }

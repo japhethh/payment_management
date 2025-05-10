@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:3000
-@token =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODAyN2RkOGEwNWU4MDBiZGQxNmFhYTYiLCJpYXQiOjE3NDY4MjY1NzAsImV4cCI6MTc0NjgzMDE3MH0.xz56nU0P28-Kl2ue3Fb1OBtLgoApUo6JsyTRdSmMTQ4
+@token =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODAyN2RkOGEwNWU4MDBiZGQxNmFhYTYiLCJpYXQiOjE3NDY4ODE1NzgsImV4cCI6MTc0Njg4NTE3OH0.JvlLu09lat6boAGKN5DGi_AYaKEzFpF6z8HpcxA6noE
 @userId = 68027dd8a05e800bdd16aaa6
 
 ### User Management Endpoints
@@ -13,10 +13,10 @@ POST {{baseUrl}}/api/user/create
 Content-Type: application/json
 
 {
-  "name": "Adrey Japheth",
-  "email": "adrey1@example.com",
+  "name": "kupal",
+  "email": "kupal@example.com",
   "password": "Jcwdlove",
-  "userName": "adrey",
+  "userName": "kupal",
   "role": "admin"
 }
 
@@ -47,6 +47,18 @@ Content-Type: application/json
   "email": "adrey2@example.com",
   "password": "Jcwdlove",
   "role": "super-admin"
+}
+
+### Register User testing only
+POST {{baseUrl}}/api/auth/registerTest
+Content-Type:"application/json"
+
+{
+  "name":"adreyjapheth",
+  "email":"brix5@gmail.com",
+  "password":"Jcwdlove5",
+  "userName":"adrey",
+  "role":"admin"
 }
 
 ### Payment Endpoints

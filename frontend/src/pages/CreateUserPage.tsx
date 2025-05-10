@@ -1,29 +1,35 @@
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import axios from 'axios';
-import { apiURL } from '@/contexts/AuthStore';
-import toast from 'react-hot-toast'
-import { useNavigate } from 'react-router-dom';
+"use client"
 
-type FormValues = z.infer<typeof formSchema>;
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import axios from "axios"
+import { apiURL } from "@/contexts/AuthStore"
+import toast from "react-hot-toast"
+import { useNavigate } from "react-router-dom"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+
+type FormValues = z.infer<typeof formSchema>
 
 // 1. Define form schema
-const formSchema = z.object({
-  image: z.instanceof(FileList)
-    .refine(files => files?.length > 0, "Image is required"),
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  email: z.string().email("Please enter a valid email"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-  confirmPassword: z.string(),
-}).refine(data => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ["confirmPassword"]
-});
-
+const formSchema = z
+  .object({
+    image: z.instanceof(FileList).refine((files) => files?.length > 0, "Image is required"),
+    name: z.string().min(2, "Name must be at least 2 characters"),
+    email: z.string().email("Please enter a valid email"),
+    password: z.string().min(6, "Password must be at least 6 characters"),
+    confirmPassword: z.string(),
+    role: z.enum(["admin", "superadmin"], {
+      errorMap: () => ({ message: "Please select a valid role" }),
+    }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  })
 
 // 2. Create form component
 export default function RegistrationForm() {
@@ -33,37 +39,39 @@ export default function RegistrationForm() {
       name: "",
       email: "",
       password: "",
+      role: "",
       confirmPassword: "",
-    }
-  });
+    },
+  })
 
   const route = useNavigate()
 
   const handleSubmit = async (data: FormValues) => {
-    const formData = new FormData();
-    formData.append('name', data.name);
-    formData.append('email', data.email);
-    formData.append('password', data.password);
+    const formData = new FormData()
+    formData.append("name", data.name)
+    formData.append("email", data.email)
+    formData.append("password", data.password)
+    formData.append("role", data.role)
 
     if (data.image?.[0]) {
-      formData.append('image', data.image[0]);
+      formData.append("image", data.image[0])
     }
 
     try {
       const response = await axios.post(`${apiURL}/api/user/testCreate`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
+        headers: { "Content-Type": "multipart/form-data" },
+      })
 
       form.reset()
 
       route("/users")
       toast.success("Registration successful")
 
-      console.log('Registration successful:', response.data);
+      console.log("Registration successful:", response.data)
     } catch (error) {
-      console.error('Registration failed:', error);
+      console.error("Registration failed:", error)
     }
-  };
+  }
 
   return (
     <div className="max-w-md mx-auto p-6">
@@ -71,7 +79,6 @@ export default function RegistrationForm() {
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
-
           {/* File upload field */}
           <FormField
             name="image"
@@ -79,11 +86,7 @@ export default function RegistrationForm() {
               <FormItem>
                 <FormLabel>Profile Image</FormLabel>
                 <FormControl>
-                  <Input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => field.onChange(e.target.files)}
-                  />
+                  <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -117,6 +120,8 @@ export default function RegistrationForm() {
             )}
           />
 
+
+
           <FormField
             name="password"
             render={({ field }) => (
@@ -142,6 +147,27 @@ export default function RegistrationForm() {
               </FormItem>
             )}
           />
+          {/* Added Role field */}
+          <FormField
+            name="role"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Role</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a role" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="admin">Admin</SelectItem>
+                    <SelectItem value="superadmin">Super Admin</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           <Button type="submit" className="w-full">
             Register
@@ -149,5 +175,5 @@ export default function RegistrationForm() {
         </form>
       </Form>
     </div>
-  );
+  )
 }
