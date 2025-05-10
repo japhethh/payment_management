@@ -25,6 +25,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useEffect, useState } from "react"
 import axios from "axios"
+import { apiURL } from "@/contexts/AuthStore"
 
 // Assuming you have a store or context for user data
 // If not, you can modify this to use local state or props
@@ -91,7 +92,6 @@ const Header = () => {
       }
 
       // Replace with your actual API endpoint
-      const apiURL = "https://your-api-url.com"
 
       await axios.post(`${apiURL}/api/user/update/${userData?._id}`, formData, {
         headers: {
