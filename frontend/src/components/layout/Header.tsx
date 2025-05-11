@@ -132,10 +132,10 @@ const Header = () => {
           {/* Right side - User controls */}
           <div className="ml-auto flex items-center gap-2">
             {/* Notification button */}
-            <Button variant="ghost" size="icon" className="relative">
+            {/* <Button variant="ghost" size="icon" className="relative">
               <Bell className="h-5 w-5" />
               <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-primary"></span>
-            </Button>
+            </Button> */}
 
             {/* Profile dropdown with dialog integration */}
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

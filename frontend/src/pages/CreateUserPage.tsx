@@ -11,6 +11,8 @@ import { apiURL } from "@/contexts/AuthStore"
 import toast from "react-hot-toast"
 import { useNavigate } from "react-router-dom"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useState, useEffect } from "react"
+import { X } from "lucide-react"
 
 type FormValues = z.infer<typeof formSchema>
 
@@ -33,6 +35,8 @@ const formSchema = z
 
 // 2. Create form component
 export default function RegistrationForm() {
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -45,6 +49,47 @@ export default function RegistrationForm() {
   })
 
   const route = useNavigate()
+
+  // Clean up the object URL when component unmounts or when a new image is selected
+  useEffect(() => {
+    return () => {
+      if (imagePreview) {
+        URL.revokeObjectURL(imagePreview)
+      }
+    }
+  }, [imagePreview])
+
+  const handleImageChange = (files: FileList | null) => {
+    // Clean up previous preview if it exists
+    if (imagePreview) {
+      URL.revokeObjectURL(imagePreview)
+    }
+
+    if (files && files.length > 0) {
+      // Create a preview URL for the selected image
+      const previewUrl = URL.createObjectURL(files[0])
+      setImagePreview(previewUrl)
+    } else {
+      setImagePreview(null)
+    }
+
+    // Update form value
+    form.setValue("image", files as FileList, { shouldValidate: true })
+  }
+
+  const clearImagePreview = () => {
+    if (imagePreview) {
+      URL.revokeObjectURL(imagePreview)
+      setImagePreview(null)
+      form.setValue("image", undefined as any, { shouldValidate: true })
+
+      // Reset the file input
+      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement
+      if (fileInput) {
+        fileInput.value = ""
+      }
+    }
+  }
 
   const handleSubmit = async (data: FormValues) => {
     const formData = new FormData()
@@ -63,6 +108,7 @@ export default function RegistrationForm() {
       })
 
       form.reset()
+      setImagePreview(null)
 
       route("/users")
       toast.success("Registration successful")
@@ -70,24 +116,48 @@ export default function RegistrationForm() {
       console.log("Registration successful:", response.data)
     } catch (error) {
       console.error("Registration failed:", error)
+      toast.error("Registration failed")
     }
   }
 
   return (
     <div className="max-w-md mx-auto p-6">
+      <div className="flex justify-between items-center"></div>
+
       <h2 className="text-2xl font-bold text-center mb-6">Create an account</h2>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
-          {/* File upload field */}
+          {/* File upload field with preview */}
           <FormField
             name="image"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Profile Image</FormLabel>
-                <FormControl>
-                  <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
-                </FormControl>
+                <div className="space-y-2">
+                  <FormControl>
+                    <Input type="file" accept="image/*" onChange={(e) => handleImageChange(e.target.files)} />
+                  </FormControl>
+
+                  {/* Image preview */}
+                  {imagePreview && (
+                    <div className="relative w-20 h-20 mt-2">
+                      <img
+                        src={imagePreview || "/placeholder.svg"}
+                        alt="Profile preview"
+                        className="w-full h-full object-cover rounded-md border border-gray-200"
+                      />
+                      <button
+                        type="button"
+                        onClick={clearImagePreview}
+                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"
+                        aria-label="Remove image"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  )}
+                </div>
                 <FormMessage />
               </FormItem>
             )}
@@ -120,8 +190,6 @@ export default function RegistrationForm() {
             )}
           />
 
-
-
           <FormField
             name="password"
             render={({ field }) => (
@@ -147,7 +215,8 @@ export default function RegistrationForm() {
               </FormItem>
             )}
           />
-          {/* Added Role field */}
+
+          {/* Role field */}
           <FormField
             name="role"
             render={({ field }) => (

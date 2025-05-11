@@ -32,26 +32,24 @@ export default function Sidebar() {
     return () => window.removeEventListener("resize", checkIfMobile)
   }, [])
 
-
-
   const handleLogout = () => {
     localStorage.removeItem("token")
     localStorage.removeItem("user")
     window.location.href = "/login"
   }
 
-  const activeLinkClass = "bg-accent text-accent-foreground"
-  const defaultLinkClass = "hover:bg-muted hover:text-muted-foreground"
+  // Updated color classes for light blue theme
+  const activeLinkClass = "bg-blue-200 text-blue-700"
+  const defaultLinkClass = "hover:bg-blue-100 hover:text-blue-500"
 
   const SidebarContent = () => (
     <div className="h-full flex flex-col">
-      <div className="flex items-center justify-between p-4">
+      <div className="flex items-center justify-between p-4 bg-white text-black">
         <h2
           className={`font-semibold text-lg transition-opacity duration-200 ${isCollapsed ? "opacity-0 hidden" : "opacity-100"}`}
         >
           Dashboard
         </h2>
-
       </div>
 
       <nav className="flex-1 flex flex-col p-4 space-y-1 overflow-y-auto">
@@ -59,7 +57,8 @@ export default function Sidebar() {
         <NavLink
           to="/"
           className={({ isActive }) =>
-            `flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive ? activeLinkClass : defaultLinkClass
+            `flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+              isActive ? activeLinkClass : defaultLinkClass
             } ${isCollapsed && !isMobile ? "justify-center" : ""}`
           }
           onClick={() => isMobile && setIsOpen(false)}
@@ -72,7 +71,8 @@ export default function Sidebar() {
         <NavLink
           to="/invoice-management"
           className={({ isActive }) =>
-            `flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive ? activeLinkClass : defaultLinkClass
+            `flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+              isActive ? activeLinkClass : defaultLinkClass
             } ${isCollapsed && !isMobile ? "justify-center" : ""}`
           }
           onClick={() => isMobile && setIsOpen(false)}
@@ -81,13 +81,11 @@ export default function Sidebar() {
           <span className={`${isCollapsed && !isMobile ? "hidden" : "block"}`}>Invoice Management</span>
         </NavLink>
 
-
-
         {/* User Management - Accordion for expanded view */}
         {!isCollapsed || isMobile ? (
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="item-1" className="border-b-0">
-              <AccordionTrigger className="py-2 px-3 hover:no-underline rounded-md hover:bg-muted">
+              <AccordionTrigger className="py-2 px-3 hover:no-underline rounded-md hover:bg-blue-100 hover:text-blue-700">
                 <div className="flex items-center gap-2">
                   <Users className="h-4 w-4" />
                   <span>User Management</span>
@@ -98,7 +96,8 @@ export default function Sidebar() {
                   <NavLink
                     to="/users"
                     className={({ isActive }) =>
-                      `flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive ? activeLinkClass : defaultLinkClass
+                      `flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+                        isActive ? activeLinkClass : defaultLinkClass
                       }`
                     }
                     onClick={() => isMobile && setIsOpen(false)}
@@ -108,7 +107,8 @@ export default function Sidebar() {
                   <NavLink
                     to="/create"
                     className={({ isActive }) =>
-                      `flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive ? activeLinkClass : defaultLinkClass
+                      `flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+                        isActive ? activeLinkClass : defaultLinkClass
                       }`
                     }
                     onClick={() => isMobile && setIsOpen(false)}
@@ -118,8 +118,6 @@ export default function Sidebar() {
                 </div>
               </AccordionContent>
             </AccordionItem>
-
-    
           </Accordion>
         ) : (
           // Icon-only view for collapsed sidebar
@@ -127,7 +125,8 @@ export default function Sidebar() {
             <NavLink
               to="/users"
               className={({ isActive }) =>
-                `flex items-center justify-center rounded-md p-2 text-sm font-medium transition-colors ${isActive ? activeLinkClass : defaultLinkClass
+                `flex items-center justify-center rounded-md p-2 text-sm font-medium transition-colors ${
+                  isActive ? activeLinkClass : defaultLinkClass
                 }`
               }
             >
@@ -136,7 +135,8 @@ export default function Sidebar() {
             <NavLink
               to="/posts"
               className={({ isActive }) =>
-                `flex items-center justify-center rounded-md p-2 text-sm font-medium transition-colors ${isActive ? activeLinkClass : defaultLinkClass
+                `flex items-center justify-center rounded-md p-2 text-sm font-medium transition-colors ${
+                  isActive ? activeLinkClass : defaultLinkClass
                 }`
               }
             >
@@ -149,7 +149,8 @@ export default function Sidebar() {
         <NavLink
           to="/calendar"
           className={({ isActive }) =>
-            `flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive ? activeLinkClass : defaultLinkClass
+            `flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+              isActive ? activeLinkClass : defaultLinkClass
             } ${isCollapsed && !isMobile ? "justify-center" : ""} ${isMobile ? "md:flex hidden" : ""}`
           }
           onClick={() => isMobile && setIsOpen(false)}
@@ -160,11 +161,11 @@ export default function Sidebar() {
       </nav>
 
       {/* Logout Button */}
-      <div className="p-4 border-t">
+      <div className="p-4 border-t border-blue-200">
         <Button
           variant="ghost"
           onClick={handleLogout}
-          className={`w-full gap-2 ${isCollapsed && !isMobile ? "justify-center" : "justify-start"}`}
+          className={`w-full gap-2 text-blue-700 hover:bg-blue-100 hover:text-blue-800 ${isCollapsed && !isMobile ? "justify-center" : "justify-start"}`}
         >
           <LogOut className="h-4 w-4" />
           <span className={`${isCollapsed && !isMobile ? "hidden" : "block"}`}>Logout</span>
@@ -182,7 +183,7 @@ export default function Sidebar() {
         <Button
           variant="ghost"
           size="sm"
-          className="md:hidden fixed top-4 left-4 z-40 p-2 rounded-full"
+          className="md:hidden fixed top-4 left-4 z-40 p-2 rounded-full bg-blue-100 text-blue-700 hover:bg-blue-200"
           onClick={() => setIsOpen(true)}
         >
           <Menu className="h-5 w-5" />
@@ -192,13 +193,13 @@ export default function Sidebar() {
       {/* Mobile Sidebar */}
       {isMobile ? (
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
-          <SheetContent side="left" className="p-0 w-[240px]">
+          <SheetContent side="left" className="p-0 w-[240px] bg-white border-r border-blue-200">
             <SidebarContent />
           </SheetContent>
         </Sheet>
       ) : (
         // Desktop Sidebar
-        <aside className="h-screen border-r bg-background flex-shrink-0">
+        <aside className="h-screen border-r border-blue-200 bg-white flex-shrink-0">
           <div
             className={`h-full flex flex-col transition-all duration-300 ease-in-out ${isCollapsed ? "w-16" : "w-64"}`}
           >

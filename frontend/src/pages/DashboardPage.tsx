@@ -133,10 +133,9 @@ export default function ReportingAnalytics(): React.ReactElement {
       <div className="mb-6">
         <Tabs defaultValue="dashboard" className="w-full">
           <ScrollArea className="w-full">
-            <TabsList className="grid min-w-[400px] w-full grid-cols-4 mb-6">
+            <TabsList className="grid min-w-[400px] w-full grid-cols-3 mb-6">
               <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
               <TabsTrigger value="payments">Payments</TabsTrigger>
-              <TabsTrigger value="invoices">Invoices</TabsTrigger>
               <TabsTrigger value="customers">Customers</TabsTrigger>
             </TabsList>
           </ScrollArea>
@@ -231,10 +230,10 @@ export default function ReportingAnalytics(): React.ReactElement {
                         <div className="h-2 bg-muted rounded-full overflow-hidden">
                           <div
                             className={`h-full rounded-full ${item.method === "Credit Card"
-                                ? "bg-blue-500"
-                                : item.method === "PayPal"
-                                  ? "bg-purple-500"
-                                  : "bg-green-500"
+                              ? "bg-blue-500"
+                              : item.method === "PayPal"
+                                ? "bg-purple-500"
+                                : "bg-green-500"
                               }`}
                             style={{ width: `${(item.amount / 295000) * 100}%` }}
                           ></div>
@@ -308,10 +307,10 @@ export default function ReportingAnalytics(): React.ReactElement {
                         <div className="h-2 bg-muted rounded-full overflow-hidden">
                           <div
                             className={`h-full rounded-full ${item.status === "Completed"
-                                ? "bg-green-500"
-                                : item.status === "Pending"
-                                  ? "bg-yellow-500"
-                                  : "bg-red-500"
+                              ? "bg-green-500"
+                              : item.status === "Pending"
+                                ? "bg-yellow-500"
+                                : "bg-red-500"
                               }`}
                             style={{ width: `${(item.amount / 295000) * 100}%` }}
                           ></div>
@@ -436,107 +435,7 @@ export default function ReportingAnalytics(): React.ReactElement {
             </Card>
           </TabsContent>
 
-          <TabsContent value="invoices">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg sm:text-xl">Invoice Reports</CardTitle>
-                <CardDescription>Detailed analysis of invoices.</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {/* Responsive filter controls - stack on mobile */}
-                <div className="flex flex-col sm:flex-row gap-4 mb-6">
-                  <div className="flex items-center gap-2">
-                    <Filter className="h-4 w-4 text-muted-foreground" />
-                    <Label>Filter by:</Label>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
-                    <Select defaultValue="all">
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Status" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All Statuses</SelectItem>
-                        <SelectItem value="paid">Paid</SelectItem>
-                        <SelectItem value="pending">Pending</SelectItem>
-                        <SelectItem value="overdue">Overdue</SelectItem>
-                        <SelectItem value="cancelled">Cancelled</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <Select defaultValue="date_desc">
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Sort by" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="date_desc">Date (Newest)</SelectItem>
-                        <SelectItem value="date_asc">Date (Oldest)</SelectItem>
-                        <SelectItem value="amount_desc">Amount (Highest)</SelectItem>
-                        <SelectItem value="amount_asc">Amount (Lowest)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
 
-                {/* Responsive table with horizontal scroll on small screens */}
-                <div className="overflow-x-auto">
-                  <div className="rounded-md border min-w-[600px]">
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Invoice #</TableHead>
-                          <TableHead>Issue Date</TableHead>
-                          <TableHead>Due Date</TableHead>
-                          <TableHead>Customer</TableHead>
-                          <TableHead>Status</TableHead>
-                          <TableHead className="text-right">Amount</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {Array.from({ length: 10 }).map((_, i) => (
-                          <TableRow key={i}>
-                            <TableCell className="font-medium">
-                              INV-{2023}-{1000 + i}
-                            </TableCell>
-                            <TableCell>
-                              {new Date(Date.now() - i * 3 * 24 * 60 * 60 * 1000).toLocaleDateString()}
-                            </TableCell>
-                            <TableCell>
-                              {new Date(Date.now() + (30 - i * 3) * 24 * 60 * 60 * 1000).toLocaleDateString()}
-                            </TableCell>
-                            <TableCell>Customer {i + 1}</TableCell>
-                            <TableCell>
-                              {i % 5 === 0 ? (
-                                <Badge className="bg-red-500 hover:bg-red-600">Overdue</Badge>
-                              ) : i % 4 === 0 ? (
-                                <Badge className="bg-yellow-500 hover:bg-yellow-600">Pending</Badge>
-                              ) : i % 7 === 0 ? (
-                                <Badge className="bg-gray-500 hover:bg-gray-600">Cancelled</Badge>
-                              ) : (
-                                <Badge className="bg-green-500 hover:bg-green-600">Paid</Badge>
-                              )}
-                            </TableCell>
-                            <TableCell className="text-right">${(Math.random() * 1000 + 100).toFixed(2)}</TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </div>
-                </div>
-              </CardContent>
-              <CardFooter className="flex flex-col sm:flex-row justify-between items-center gap-4">
-                <div className="text-sm">Showing 10 of 156 invoices</div>
-                <div className="flex gap-2">
-                  <Button variant="outline" size="sm">
-                    <ChevronLeft className="h-4 w-4 mr-1 sm:mr-0" />
-                    <span className="sm:hidden">Previous</span>
-                  </Button>
-                  <Button variant="outline" size="sm">
-                    <span className="sm:hidden">Next</span>
-                    <ChevronRight className="h-4 w-4 ml-1 sm:ml-0" />
-                  </Button>
-                </div>
-              </CardFooter>
-            </Card>
-          </TabsContent>
 
           <TabsContent value="customers">
             <Card>
