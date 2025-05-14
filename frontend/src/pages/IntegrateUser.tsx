@@ -47,10 +47,6 @@ interface User {
   updatedAt: string
 }
 
-interface ApiResponse {
-  status: string
-  user: User[]
-}
 
 const IntegrateUser = () => {
   // State for users data
