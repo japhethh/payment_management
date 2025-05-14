@@ -11,7 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Bell, LogOut, User } from "lucide-react"
+import { LogOut, User } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   Dialog,
@@ -95,7 +95,6 @@ const Header = () => {
       }
 
       // Replace with your actual API endpoint
-
       await axios.post(`${apiURL}/api/user/update`, { formData, _id: userData?.id }, {
         headers: {
           Authorization: `Bearer ${token}`,

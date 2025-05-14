@@ -131,7 +131,7 @@ export default function RegistrationForm() {
           {/* File upload field with preview */}
           <FormField
             name="image"
-            render={({ field }) => (
+            render={() => (
               <FormItem>
                 <FormLabel>Profile Image</FormLabel>
                 <div className="space-y-2">

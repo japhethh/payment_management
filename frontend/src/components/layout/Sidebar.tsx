@@ -57,8 +57,7 @@ export default function Sidebar() {
         <NavLink
           to="/"
           className={({ isActive }) =>
-            `flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-              isActive ? activeLinkClass : defaultLinkClass
+            `flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive ? activeLinkClass : defaultLinkClass
             } ${isCollapsed && !isMobile ? "justify-center" : ""}`
           }
           onClick={() => isMobile && setIsOpen(false)}
@@ -71,8 +70,7 @@ export default function Sidebar() {
         <NavLink
           to="/invoice-management"
           className={({ isActive }) =>
-            `flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-              isActive ? activeLinkClass : defaultLinkClass
+            `flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive ? activeLinkClass : defaultLinkClass
             } ${isCollapsed && !isMobile ? "justify-center" : ""}`
           }
           onClick={() => isMobile && setIsOpen(false)}
@@ -96,8 +94,7 @@ export default function Sidebar() {
                   <NavLink
                     to="/users"
                     className={({ isActive }) =>
-                      `flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-                        isActive ? activeLinkClass : defaultLinkClass
+                      `flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive ? activeLinkClass : defaultLinkClass
                       }`
                     }
                     onClick={() => isMobile && setIsOpen(false)}
@@ -105,10 +102,19 @@ export default function Sidebar() {
                     All Users
                   </NavLink>
                   <NavLink
+                    to="/accounts"
+                    className={({ isActive }) =>
+                      `flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive ? activeLinkClass : defaultLinkClass
+                      }`
+                    }
+                    onClick={() => isMobile && setIsOpen(false)}
+                  >
+                    Other Department
+                  </NavLink>
+                  <NavLink
                     to="/create"
                     className={({ isActive }) =>
-                      `flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-                        isActive ? activeLinkClass : defaultLinkClass
+                      `flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive ? activeLinkClass : defaultLinkClass
                       }`
                     }
                     onClick={() => isMobile && setIsOpen(false)}
@@ -125,8 +131,7 @@ export default function Sidebar() {
             <NavLink
               to="/users"
               className={({ isActive }) =>
-                `flex items-center justify-center rounded-md p-2 text-sm font-medium transition-colors ${
-                  isActive ? activeLinkClass : defaultLinkClass
+                `flex items-center justify-center rounded-md p-2 text-sm font-medium transition-colors ${isActive ? activeLinkClass : defaultLinkClass
                 }`
               }
             >
@@ -135,8 +140,7 @@ export default function Sidebar() {
             <NavLink
               to="/posts"
               className={({ isActive }) =>
-                `flex items-center justify-center rounded-md p-2 text-sm font-medium transition-colors ${
-                  isActive ? activeLinkClass : defaultLinkClass
+                `flex items-center justify-center rounded-md p-2 text-sm font-medium transition-colors ${isActive ? activeLinkClass : defaultLinkClass
                 }`
               }
             >
@@ -149,8 +153,7 @@ export default function Sidebar() {
         <NavLink
           to="/calendar"
           className={({ isActive }) =>
-            `flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-              isActive ? activeLinkClass : defaultLinkClass
+            `flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive ? activeLinkClass : defaultLinkClass
             } ${isCollapsed && !isMobile ? "justify-center" : ""} ${isMobile ? "md:flex hidden" : ""}`
           }
           onClick={() => isMobile && setIsOpen(false)}

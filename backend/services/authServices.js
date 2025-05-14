@@ -1,5 +1,6 @@
 import userModel from "../models/userModel.js";
 import asyncHandler from "express-async-handler";
+
 export const registerService = asyncHandler(async (data) => {
   const { name, email, password, userName, role } = data;
 

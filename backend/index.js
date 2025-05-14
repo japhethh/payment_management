@@ -10,6 +10,7 @@ import invoiceRouter from "./routes/invoiceRouter.js";
 import paymentRouter from "./routes/paymentRouter.js";
 import reportRouter from "./routes/reportRouter.js";
 import webhookRouter from "./routes/webhookRouter.js";
+import axios from "axios";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -32,6 +33,36 @@ app.use("/api/payments", paymentRouter);
 app.use("/api/invoices", invoiceRouter);
 app.use("/api/reports", reportRouter);
 app.use("/api/webhooks", webhookRouter);
+// Fixed API integration endpoint
+app.use("/api/integrationapi", async (req, res) => {
+  try {
+    const response = await axios.get(
+      "https://sms-backend.imraffydev.com/api/account/users"
+    );
+
+    // Make sure we're accessing the data correctly
+    console.log("External API response:", response.data);
+
+    if (!response.data) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Accounts not found" });
+    }
+
+    // Return the data in the expected format
+    return res.status(200).json({
+      status: "success",
+      user: response.data,
+    });
+  } catch (error) {
+    console.error("Integration API error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch accounts",
+      error: error.message,
+    });
+  }
+});
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

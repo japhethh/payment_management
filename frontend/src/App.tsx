@@ -17,6 +17,7 @@ import UserTable from './pages/UserTable'
 import InvoiceManagement from "./pages/InvoiceManagement";
 import PaymentProcess from "./pages/PaymentProcess";
 import PaymentGateway from "./pages/PaymentGateway";
+import IntegrateUser from "./pages/IntegrateUser";
 
 
 interface AuthRouteProps {
@@ -50,6 +51,7 @@ const protectedRoutes = [
   { path: "/posts", element: <PostsPage /> },
   { path: "/media", element: <MediaPage /> },
   { path: "/calendar", element: <CalendarPage /> },
+  { path: "/accounts", element: <IntegrateUser /> },
 ];
 
 const authRoutes = [
