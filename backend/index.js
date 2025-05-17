@@ -11,6 +11,7 @@ import paymentRouter from "./routes/paymentRouter.js";
 import reportRouter from "./routes/reportRouter.js";
 import webhookRouter from "./routes/webhookRouter.js";
 import axios from "axios";
+import studentRouter from "./routes/studentRoutes.js";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -33,6 +34,8 @@ app.use("/api/payments", paymentRouter);
 app.use("/api/invoices", invoiceRouter);
 app.use("/api/reports", reportRouter);
 app.use("/api/webhooks", webhookRouter);
+app.use("/api/students", studentRouter);
+
 // Fixed API integration endpoint
 app.use("/api/integrationapi", async (req, res) => {
   try {

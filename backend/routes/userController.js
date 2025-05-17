@@ -19,7 +19,7 @@ const getUsers = asyncHandler(async (req, res) => {
 const getUserId = asyncHandler(async (req, res) => {
   try {
     const user = req.user;
-    console.log(user);
+    console.log(user); 
     const data = await userModel.findById(user);
 
     if (!data) {

@@ -2,11 +2,13 @@
 
 import { useState, useEffect } from "react"
 import { NavLink } from "react-router-dom"
-import { LayoutDashboard, Users, Calendar, FileText, LogOut, Menu, NotebookText } from "lucide-react"
+import { LayoutDashboard, Users, Calendar, LogOut, Menu, NotebookText, X, FileUser } from "lucide-react"
 
+import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent } from "@/components/ui/sheet"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+
 
 export default function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false)
@@ -16,8 +18,9 @@ export default function Sidebar() {
   // Handle screen resize to detect mobile
   useEffect(() => {
     const checkIfMobile = () => {
-      setIsMobile(window.innerWidth < 768)
-      if (window.innerWidth < 768) {
+      const mobile = window.innerWidth < 768
+      setIsMobile(mobile)
+      if (mobile) {
         setIsCollapsed(true)
       }
     }
@@ -38,6 +41,10 @@ export default function Sidebar() {
     window.location.href = "/login"
   }
 
+  const toggleSidebar = () => {
+    setIsCollapsed(!isCollapsed)
+  }
+
   // Updated color classes for light blue theme
   const activeLinkClass = "bg-blue-200 text-blue-700"
   const defaultLinkClass = "hover:bg-blue-100 hover:text-blue-500"
@@ -46,10 +53,33 @@ export default function Sidebar() {
     <div className="h-full flex flex-col">
       <div className="flex items-center justify-between p-4 bg-white text-black">
         <h2
-          className={`font-semibold text-lg transition-opacity duration-200 ${isCollapsed ? "opacity-0 hidden" : "opacity-100"}`}
+          className={cn(
+            "font-semibold text-lg transition-opacity duration-200",
+            isCollapsed && !isMobile ? "opacity-0 hidden" : "opacity-100",
+          )}
         >
           Dashboard
         </h2>
+        {!isMobile && (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="p-2 rounded-full text-blue-700 hover:bg-blue-100"
+            onClick={toggleSidebar}
+          >
+            <Menu className="h-4 w-4" />
+          </Button>
+        )}
+        {isMobile && (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="p-2 rounded-full text-blue-700 hover:bg-blue-100"
+            onClick={() => setIsOpen(false)}
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        )}
       </div>
 
       <nav className="flex-1 flex flex-col p-4 space-y-1 overflow-y-auto">
@@ -57,27 +87,65 @@ export default function Sidebar() {
         <NavLink
           to="/"
           className={({ isActive }) =>
-            `flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive ? activeLinkClass : defaultLinkClass
-            } ${isCollapsed && !isMobile ? "justify-center" : ""}`
+            cn(
+              "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+              isActive ? activeLinkClass : defaultLinkClass,
+              isCollapsed && !isMobile ? "justify-center" : "",
+            )
           }
           onClick={() => isMobile && setIsOpen(false)}
         >
           <LayoutDashboard className="h-4 w-4" />
-          <span className={`${isCollapsed && !isMobile ? "hidden" : "block"}`}>Dashboard</span>
+          <span className={cn(isCollapsed && !isMobile ? "hidden" : "block")}>Dashboard</span>
         </NavLink>
 
         {/* Invoice Management */}
         <NavLink
           to="/invoice-management"
           className={({ isActive }) =>
-            `flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive ? activeLinkClass : defaultLinkClass
-            } ${isCollapsed && !isMobile ? "justify-center" : ""}`
+            cn(
+              "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+              isActive ? activeLinkClass : defaultLinkClass,
+              isCollapsed && !isMobile ? "justify-center" : "",
+            )
           }
           onClick={() => isMobile && setIsOpen(false)}
         >
           <NotebookText className="h-4 w-4" />
-          <span className={`${isCollapsed && !isMobile ? "hidden" : "block"}`}>Invoice Management</span>
+          <span className={cn(isCollapsed && !isMobile ? "hidden" : "block")}>Invoice Management</span>
         </NavLink>
+
+        {/* Staff Management */}
+        <NavLink
+          to="/staff"
+          className={({ isActive }) =>
+            cn(
+              "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+              isActive ? activeLinkClass : defaultLinkClass,
+              isCollapsed && !isMobile ? "justify-center" : "",
+            )
+          }
+          onClick={() => isMobile && setIsOpen(false)}
+        >
+          <Users className="h-4 w-4" />
+          <span className={cn(isCollapsed && !isMobile ? "hidden" : "block")}>Staff</span>
+        </NavLink>
+        {/* Staff Management */}
+        <NavLink
+          to="/students"
+          className={({ isActive }) =>
+            cn(
+              "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+              isActive ? activeLinkClass : defaultLinkClass,
+              isCollapsed && !isMobile ? "justify-center" : "",
+            )
+          }
+          onClick={() => isMobile && setIsOpen(false)}
+        >
+          <FileUser className="h-4 w-4" />
+          <span className={cn(isCollapsed && !isMobile ? "hidden" : "block")}>Students</span>
+        </NavLink>
+
 
         {/* User Management - Accordion for expanded view */}
         {!isCollapsed || isMobile ? (
@@ -94,8 +162,10 @@ export default function Sidebar() {
                   <NavLink
                     to="/users"
                     className={({ isActive }) =>
-                      `flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive ? activeLinkClass : defaultLinkClass
-                      }`
+                      cn(
+                        "flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                        isActive ? activeLinkClass : defaultLinkClass,
+                      )
                     }
                     onClick={() => isMobile && setIsOpen(false)}
                   >
@@ -104,8 +174,10 @@ export default function Sidebar() {
                   <NavLink
                     to="/accounts"
                     className={({ isActive }) =>
-                      `flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive ? activeLinkClass : defaultLinkClass
-                      }`
+                      cn(
+                        "flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                        isActive ? activeLinkClass : defaultLinkClass,
+                      )
                     }
                     onClick={() => isMobile && setIsOpen(false)}
                   >
@@ -114,8 +186,10 @@ export default function Sidebar() {
                   <NavLink
                     to="/create"
                     className={({ isActive }) =>
-                      `flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive ? activeLinkClass : defaultLinkClass
-                      }`
+                      cn(
+                        "flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                        isActive ? activeLinkClass : defaultLinkClass,
+                      )
                     }
                     onClick={() => isMobile && setIsOpen(false)}
                   >
@@ -126,26 +200,51 @@ export default function Sidebar() {
             </AccordionItem>
           </Accordion>
         ) : (
-          // Icon-only view for collapsed sidebar
-          <div className="flex flex-col space-y-1">
-            <NavLink
-              to="/users"
-              className={({ isActive }) =>
-                `flex items-center justify-center rounded-md p-2 text-sm font-medium transition-colors ${isActive ? activeLinkClass : defaultLinkClass
-                }`
-              }
-            >
+          // Icon-only view for collapsed sidebar with tooltip
+          <div className="relative group">
+            <Button variant="ghost" size="sm" className="w-full justify-center p-2 rounded-md">
               <Users className="h-4 w-4" />
-            </NavLink>
-            <NavLink
-              to="/posts"
-              className={({ isActive }) =>
-                `flex items-center justify-center rounded-md p-2 text-sm font-medium transition-colors ${isActive ? activeLinkClass : defaultLinkClass
-                }`
-              }
-            >
-              <FileText className="h-4 w-4" />
-            </NavLink>
+            </Button>
+
+            {/* Tooltip on hover when collapsed */}
+            <div className="absolute left-full top-0 ml-2 hidden group-hover:block z-50">
+              <div className="bg-white shadow-md rounded-md py-2 px-2 text-sm border border-blue-100">
+                <div className="font-medium mb-1 text-blue-700">User Management</div>
+                <NavLink
+                  to="/users"
+                  className={({ isActive }) =>
+                    cn(
+                      "flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                      isActive ? activeLinkClass : defaultLinkClass,
+                    )
+                  }
+                >
+                  All Users
+                </NavLink>
+                <NavLink
+                  to="/accounts"
+                  className={({ isActive }) =>
+                    cn(
+                      "flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                      isActive ? activeLinkClass : defaultLinkClass,
+                    )
+                  }
+                >
+                  Other Department
+                </NavLink>
+                <NavLink
+                  to="/create"
+                  className={({ isActive }) =>
+                    cn(
+                      "flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                      isActive ? activeLinkClass : defaultLinkClass,
+                    )
+                  }
+                >
+                  Create User
+                </NavLink>
+              </div>
+            </div>
           </div>
         )}
 
@@ -153,13 +252,17 @@ export default function Sidebar() {
         <NavLink
           to="/calendar"
           className={({ isActive }) =>
-            `flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive ? activeLinkClass : defaultLinkClass
-            } ${isCollapsed && !isMobile ? "justify-center" : ""} ${isMobile ? "md:flex hidden" : ""}`
+            cn(
+              "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+              isActive ? activeLinkClass : defaultLinkClass,
+              isCollapsed && !isMobile ? "justify-center" : "",
+              isMobile ? "md:flex hidden" : "",
+            )
           }
           onClick={() => isMobile && setIsOpen(false)}
         >
           <Calendar className="h-4 w-4" />
-          <span className={`${isCollapsed && !isMobile ? "hidden" : "block"}`}>Calendar</span>
+          <span className={cn(isCollapsed && !isMobile ? "hidden" : "block")}>Calendar</span>
         </NavLink>
       </nav>
 
@@ -168,17 +271,18 @@ export default function Sidebar() {
         <Button
           variant="ghost"
           onClick={handleLogout}
-          className={`w-full gap-2 text-blue-700 hover:bg-blue-100 hover:text-blue-800 ${isCollapsed && !isMobile ? "justify-center" : "justify-start"}`}
+          className={cn(
+            "w-full gap-2 text-blue-700 hover:bg-blue-100 hover:text-blue-800",
+            isCollapsed && !isMobile ? "justify-center" : "justify-start",
+          )}
         >
           <LogOut className="h-4 w-4" />
-          <span className={`${isCollapsed && !isMobile ? "hidden" : "block"}`}>Logout</span>
+          <span className={cn(isCollapsed && !isMobile ? "hidden" : "block")}>Logout</span>
         </Button>
       </div>
     </div>
   )
 
-  // For mobile: render a Sheet component
-  // For desktop: render the sidebar directly
   return (
     <>
       {/* Mobile Trigger - Only visible on mobile */}
@@ -204,7 +308,10 @@ export default function Sidebar() {
         // Desktop Sidebar
         <aside className="h-screen border-r border-blue-200 bg-white flex-shrink-0">
           <div
-            className={`h-full flex flex-col transition-all duration-300 ease-in-out ${isCollapsed ? "w-16" : "w-64"}`}
+            className={cn(
+              "h-full flex flex-col transition-all duration-300 ease-in-out",
+              isCollapsed ? "w-16" : "w-64",
+            )}
           >
             <SidebarContent />
           </div>

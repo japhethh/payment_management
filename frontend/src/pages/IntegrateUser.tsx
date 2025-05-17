@@ -54,7 +54,6 @@ const IntegrateUser = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  // State for search and filtering
   const [searchQuery, setSearchQuery] = useState("")
 
   // State for action dialogs
@@ -66,7 +65,6 @@ const IntegrateUser = () => {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null)
   const [isSaving, setIsSaving] = useState(false)
 
-  // Fetch users data
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -75,7 +73,6 @@ const IntegrateUser = () => {
 
         console.log("API Response:", response.data.user.user)
 
-        // Check if response has the expected structure
         if (response.data && response.data.user && response.data.user.user && Array.isArray(response.data.user.user)) {
           setUsers(response.data.user.user)
         } else {
@@ -92,7 +89,6 @@ const IntegrateUser = () => {
     fetchUsers()
   }, [])
 
-  // Filter users based on search query
   const filteredUsers = users.filter((user) => {
     return (
       user.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||

@@ -5,10 +5,7 @@ import useAuthStore from "./contexts/AuthStore";
 import { Toaster } from 'react-hot-toast';
 import MainLayout from "./components/layout/MainLayout";
 import DashboardPage from "./pages/DashboardPage";
-import SettingsPage from "./pages/SettingsPage";
 import CreateUserPage from "./pages/CreateUserPage";
-import PostsPage from "./pages/PostsPage";
-import MediaPage from "./pages/MediaPage";
 import CalendarPage from "./pages/CalendarPage";
 import { LoginPage } from "./pages/Auth/LoginPage";
 import { RegisterForm } from "./pages/Auth/RegisterForm";
@@ -18,6 +15,9 @@ import InvoiceManagement from "./pages/InvoiceManagement";
 import PaymentProcess from "./pages/PaymentProcess";
 import PaymentGateway from "./pages/PaymentGateway";
 import IntegrateUser from "./pages/IntegrateUser";
+import StudentsPage from "./pages/Students";
+import Staff from "./pages/Staff";
+import Students from "./pages/Students";
 
 
 interface AuthRouteProps {
@@ -45,13 +45,14 @@ const protectedRoutes = [
   { path: "/invoice-management", element: <InvoiceManagement /> },
   { path: "/payment-process", element: <PaymentProcess /> },
   { path: "/payment-gateway", element: <PaymentGateway /> },
-  { path: "/settings", element: <SettingsPage /> },
   { path: "/users", element: < UserTable /> },
   { path: "/create", element: <CreateUserPage /> },
-  { path: "/posts", element: <PostsPage /> },
-  { path: "/media", element: <MediaPage /> },
+
+  { path: "/studentpage", element: <StudentsPage /> },
   { path: "/calendar", element: <CalendarPage /> },
   { path: "/accounts", element: <IntegrateUser /> },
+  { path: "/staff", element: <Staff /> },
+  { path: "/students", element: <Students /> },
 ];
 
 const authRoutes = [

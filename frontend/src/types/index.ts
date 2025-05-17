@@ -49,3 +49,16 @@ export interface UpdateInvoiceDto {
   customer?: string;
   email?: string;
 }
+
+
+
+// Student type based on the provided model
+export interface Student {
+  _id: string
+  firstName: string
+  lastName: string
+  email: string
+  program: string
+  yearLevel: string
+  createdAt: string
+}
