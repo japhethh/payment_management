@@ -25,7 +25,7 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 export function LoginPage() {
-  
+
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -128,16 +128,6 @@ export function LoginPage() {
               )}
             </form>
           </Form>
-
-          <div className="mt-4 text-center text-sm">
-            Don't have an account?{" "}
-            <Link
-              to="/register"
-              className="font-medium text-primary hover:underline"
-            >
-              Register
-            </Link>
-          </div>
         </CardContent>
       </Card>
     </div>

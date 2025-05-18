@@ -2,6 +2,7 @@ import asyncHandler from "express-async-handler";
 import userModel from "../models/userModel.js";
 import fs from "fs";
 import cloudinary from "../utils/cloudinary.js";
+import bcrypt from "bcrypt";
 
 const getUsers = asyncHandler(async (req, res) => {
   try {
@@ -19,7 +20,7 @@ const getUsers = asyncHandler(async (req, res) => {
 const getUserId = asyncHandler(async (req, res) => {
   try {
     const user = req.user;
-    console.log(user); 
+    console.log(user);
     const data = await userModel.findById(user);
 
     if (!data) {
@@ -83,10 +84,12 @@ const testCreate = asyncHandler(async (req, res) => {
       });
     }
 
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const newUser = new userModel({
       name,
       email,
-      password,
+      password: hashedPassword,
       image: imageUrl,
       role: "admin",
     });
